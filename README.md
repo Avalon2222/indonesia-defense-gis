@@ -1,7 +1,7 @@
 # 🛡️ WebGIS Pertahanan Indonesia
 
 > Peta interaktif **markas TNI**, **pulau terluar & perbatasan**, **ALKI**, dan **pangkalan militer asing di
-> kawasan**, lengkap dengan lingkaran jarak, analisis markas TNI terdekat, dan tab statistik anggaran pertahanan.
+> kawasan**, dilengkapi lingkaran jarak, analisis markas TNI terdekat, dan tab statistik anggaran pertahanan.
 > Dibangun dengan Python, pandas, Folium (Leaflet), Plotly, dan Streamlit.
 
 *An interactive WebGIS of Indonesia's defense geography: TNI bases, outermost islands and border posts,
@@ -10,28 +10,28 @@ nearest-base analysis. Built with Python, pandas, Folium, Plotly and Streamlit u
 
 ![Peta utama](docs/screenshots/01_peta.png)
 
-> ℹ️ **Disclaimer.** Semua titik di project ini berasal dari **sumber publik** (Wikipedia, situs resmi, media, laporan
-> think tank seperti CSIS AMTI dan SIPRI). Koordinat adalah perkiraan lokasi umum, bukan data operasional.
-> Ini project edukasi dan portofolio pribadi, bukan dokumen resmi, dan tidak berafiliasi dengan instansi mana pun.
+> ℹ️ **Disclaimer.** Seluruh titik dalam proyek ini berasal dari **sumber publik** (Wikipedia, situs resmi, media, laporan
+> lembaga kajian seperti CSIS AMTI dan SIPRI). Koordinat merupakan perkiraan lokasi umum, bukan data operasional.
+> Proyek ini bersifat edukatif dan merupakan portofolio pribadi, bukan dokumen resmi, serta tidak berafiliasi dengan instansi mana pun.
 
-## Kenapa project ini ada?
+## Latar belakang
 
-Gw penasaran: kalau semua markas TNI, pulau terluar, dan pangkalan militer negara lain di sekitar Indonesia
-ditaruh di satu peta, apa yang kelihatan? Seberapa jauh pos China di Spratly dari Natuna? Markas TNI mana yang
-paling dekat ke pangkalan AS di Darwin? Jawabannya ternyata lebih gampang dilihat lewat peta daripada dibaca
-dari artikel. Project ini sekaligus jadi latihan bikin **Sistem Informasi Geografis berbasis web (WebGIS)**
-pakai Python: koordinat, lapisan peta, buffer radius, dan pencarian tetangga terdekat.
+Proyek ini berangkat dari pertanyaan sederhana: jika seluruh markas TNI, pulau terluar, dan pangkalan militer negara
+lain di sekitar Indonesia ditempatkan pada satu peta, pola apa yang terlihat? Seberapa jauh pos China di Kepulauan
+Spratly dari Natuna? Markas TNI mana yang paling dekat dengan pangkalan AS di Darwin? Pertanyaan semacam ini jauh
+lebih mudah dijawab lewat peta daripada lewat teks. Sekaligus, proyek ini menjadi latihan membangun **Sistem Informasi
+Geografis berbasis web (WebGIS)** dengan Python: koordinat, lapisan peta, buffer radius, dan pencarian tetangga terdekat.
 
 ## Fitur
 
 | Tab | Isi |
 |---|---|
-| 🗺️ Peta | Peta Folium dengan 5 lapisan yang bisa dinyalakan/dimatikan: markas TNI (warna per matra), pulau terluar & pos perbatasan, ALKI I/II/III, pangkalan asing (warna per negara), lingkaran jarak 250/500/1.000/1.500 km. Pilih satu pangkalan asing → peta menarik garis ke markas TNI dan batas Indonesia terdekat |
-| 📏 Analisis Jarak | Untuk semua pangkalan asing: jarak ke pulau terluar terdekat, markas TNI terdekat, arah kompas, jumlah markas TNI dalam 500 / 1.000 km. Grafik + tabel yang bisa diurutkan |
-| 📊 Statistik | Anggaran Kemhan 2015–2026, % PDB, belanja militer kawasan (SIPRI 2024) dalam skala log, alutsista utama per matra |
-| 📋 Data & Sumber | Semua tabel + link sumber per baris + unduh CSV + catatan kejujuran data |
-| 🧭 Cara Kerja | Diagram alur data → rumus → peta, plus konsep GIS yang dipakai |
-| 🎓 Mode belajar | Toggle di sidebar: tiap bagian dapat expander berisi rumus (haversine), potongan kode, dan penjelasan |
+| 🗺️ Peta | Peta Folium dengan 5 lapisan yang dapat diaktifkan/dinonaktifkan: markas TNI (warna per matra), pulau terluar & pos perbatasan, ALKI I/II/III, pangkalan asing (warna per negara), lingkaran jarak 250/500/1.000/1.500 km. Memilih satu pangkalan asing akan menarik garis ke markas TNI dan batas Indonesia terdekat |
+| 📏 Analisis Jarak | Untuk setiap pangkalan asing: jarak ke pulau terluar terdekat, markas TNI terdekat, arah kompas, serta jumlah markas TNI dalam radius 500 / 1.000 km. Disajikan dalam grafik dan tabel yang dapat diurutkan |
+| 📊 Statistik | Anggaran Kemhan 2015–2026, persentase PDB, belanja militer kawasan (SIPRI 2024) dalam skala logaritmik, dan alutsista utama per matra |
+| 📋 Data & Sumber | Seluruh tabel beserta tautan sumber per baris, unduh CSV, dan catatan keterbatasan data |
+| 🧭 Cara Kerja | Diagram alur data → rumus → peta, beserta konsep GIS yang digunakan |
+| 🎓 Mode belajar | Toggle di sidebar: setiap bagian menampilkan expander berisi rumus (haversine), potongan kode, dan penjelasan |
 
 ![Analisis jarak](docs/screenshots/02_jarak.png)
 ![Statistik kawasan](docs/screenshots/03b_kawasan.png)
@@ -39,21 +39,21 @@ pakai Python: koordinat, lapisan peta, buffer radius, dan pencarian tetangga ter
 ## Cara menjalankan
 
 ```bash
-git clone <url-repo-ini>
+git clone https://github.com/Avalon2222/indonesia-defense-gis.git
 cd indonesia-defense-gis
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Buka `http://localhost:8501`. Jalankan tes dengan `python -m pytest tests/ -v` (11 tes).
-Peta dasar diambil dari server tile Esri / OpenStreetMap, jadi butuh koneksi internet.
+Buka `http://localhost:8501`. Jalankan pengujian dengan `python -m pytest tests/ -v` (11 tes).
+Peta dasar diambil dari server tile Esri / OpenStreetMap sehingga memerlukan koneksi internet.
 
 ## Cara kerja (ringkas)
 
 ```mermaid
 flowchart LR
-    A[data/*.csv<br/>7 file, tiap baris ada sumber] --> B[src/muat_data.py<br/>baca + validasi koordinat]
+    A[data/*.csv<br/>7 file, setiap baris memiliki sumber] --> B[src/muat_data.py<br/>baca + validasi koordinat]
     B --> C[src/geo.py<br/>haversine · titik terdekat · radius · arah]
     B --> D[src/peta.py<br/>Folium: lapisan, marker, lingkaran, garis]
     S[Sidebar: lapisan, filter, pilih pangkalan] --> E
@@ -63,19 +63,19 @@ flowchart LR
     E --> G[Grafik Plotly & tabel]
 ```
 
-Rumus inti ada di `src/geo.py` (murni Python, ada docstring + contoh angka):
+Rumus inti berada di `src/geo.py` (murni Python, dilengkapi docstring dan contoh angka):
 
-| Fungsi | Apa yang dihitung |
+| Fungsi | Yang dihitung |
 |---|---|
 | `haversine_km(lat1, lon1, lat2, lon2)` | Jarak great-circle dua koordinat (bumi dianggap bola, R = 6.371 km) |
-| `titik_terdekat(lat, lon, df)` | Baris DataFrame yang paling dekat + jaraknya (nearest neighbour) |
-| `jumlah_dalam_radius(lat, lon, df, r)` | Berapa titik dalam radius r km (buffer sederhana) |
+| `titik_terdekat(lat, lon, df)` | Baris DataFrame yang paling dekat beserta jaraknya (nearest neighbour) |
+| `jumlah_dalam_radius(lat, lon, df, r)` | Jumlah titik dalam radius r km (buffer sederhana) |
 | `arah_kompas(...)` | Bearing → 8 mata angin (U, TL, T, TG, S, BD, B, BL) |
-| `tabel_jarak(asing, tni, pulau)` | Gabungan semua di atas untuk tiap pangkalan asing |
+| `tabel_jarak(asing, tni, pulau)` | Gabungan seluruh fungsi di atas untuk setiap pangkalan asing |
 
 ## Data
 
-Tujuh file CSV di `data/`, semua dari sumber publik dengan kolom `sumber` dan `url_sumber` per baris:
+Tujuh file CSV di `data/`, seluruhnya dari sumber publik dengan kolom `sumber` dan `url_sumber` pada setiap baris:
 
 | File | Isi | Baris |
 |---|---|---|
@@ -83,66 +83,66 @@ Tujuh file CSV di `data/`, semua dari sumber publik dengan kolom `sumber` dan `u
 | `pulau_terluar_perbatasan.csv` | 15 pulau terluar, 6 PLBN darat, 3 wilayah rawan (Natuna Utara, Ambalat, Selat Malaka) | 24 |
 | `pangkalan_asing.csv` | Pangkalan militer asing di kawasan: Australia, AS (Guam, Diego Garcia, Darwin), China (Spratly, Paracel, Hainan, Ream), Singapura, Malaysia, Filipina/EDCA, Vietnam, India (Nicobar), PNG, Inggris (Brunei), Thailand | 37 |
 | `alki.csv` | Titik-titik ilustrasi ALKI I, II, III | 18 |
-| `anggaran_indonesia.csv` | Pagu APBN Kemhan 2015–2026 + % PDB | 12 |
+| `anggaran_indonesia.csv` | Pagu APBN Kemhan 2015–2026 beserta persentase PDB | 12 |
 | `anggaran_kawasan.csv` | Belanja militer 2024 (SIPRI) 10 negara kawasan | 10 |
 | `alutsista.csv` | Alutsista utama per matra (perkiraan publik) | 13 |
 
-Catatan kejujuran data ada di [`data/SUMBER_DATA.md`](data/SUMBER_DATA.md): koordinat = perkiraan, ALKI =
-ilustrasi, daftar markas mengikuti Wikipedia dan bisa tertinggal dari reorganisasi terbaru, angka anggaran =
-pembulatan dengan kolom `keyakinan`.
+Catatan keterbatasan data tersedia di [`data/SUMBER_DATA.md`](data/SUMBER_DATA.md): koordinat adalah perkiraan, ALKI
+bersifat ilustratif, daftar markas mengikuti Wikipedia dan dapat tertinggal dari reorganisasi terbaru, serta angka
+anggaran merupakan pembulatan dengan kolom `keyakinan`.
 
 ## Catatan analisis (pendapat pribadi)
 
-Label di peta sengaja netral: **"pangkalan asing di kawasan"**, bukan "ancaman". Sebagian besar justru milik negara
-mitra (Singapura, Malaysia, Australia, India). Dari angka-angka di tab Analisis Jarak, beberapa hal yang menurut gw
-menarik:
+Label pada peta sengaja dibuat netral, yaitu **"pangkalan asing di kawasan"**, bukan "ancaman". Sebagian besar justru
+milik negara mitra (Singapura, Malaysia, Australia, India). Dari angka pada tab Analisis Jarak, beberapa hal yang
+menarik untuk dicermati:
 
-1. **Yang paling dekat secara geografis bukan yang paling mengkhawatirkan.** Pangkalan Singapura hanya 27–45 km dari
-   Pulau Nipa, dan INS Baaz (India) 166 km dari Pulau Rondo, tapi keduanya mitra dekat Indonesia.
+1. **Yang paling dekat secara geografis belum tentu yang paling perlu diwaspadai.** Pangkalan Singapura hanya 27–45 km
+   dari Pulau Nipa, dan INS Baaz (India) 166 km dari Pulau Rondo, tetapi keduanya adalah mitra dekat Indonesia.
 2. **Pos China di Spratly berjarak 530–860 km dari Natuna** dan tidak ada markas TNI dalam radius 500 km dari pos-pos
-   itu; dalam 1.000 km hanya ada Natuna dan Kalimantan Utara. Ini sejalan dengan kenapa TNI terus memperkuat Natuna
+   tersebut; dalam radius 1.000 km hanya ada Natuna dan Kalimantan Utara. Ini sejalan dengan penguatan Natuna oleh TNI
    sejak 2016.
-3. **Sisi selatan dan timur** relatif "kosong": Darwin dan Tindal (Australia, dengan rotasi Marinir dan rencana B-52 AS)
-   berjarak 475–720 km dari Pulau Selaru, sementara Lombrum (Manus) dan Port Moresby (PNG, didukung AS/Australia)
-   berjarak ~700 km dari Papua. Di sisi ini pangkalan TNI terdekat adalah Lanud El Tari Kupang dan Merauke.
-4. **Selat Malaka adalah titik temu**: pangkalan Malaysia, Singapura, India, dan Thailand (akses AS) semuanya dalam
-   1.000 km dari pantai timur Sumatera; wajar kalau Koarmada I dipindah ke Tanjung Pinang.
+3. **Sisi selatan dan timur** relatif "kosong": Darwin dan Tindal (Australia, dengan rotasi Marinir AS dan rencana
+   fasilitas B-52) berjarak 475–720 km dari Pulau Selaru, sementara Lombrum (Manus) dan Port Moresby (PNG, didukung
+   AS/Australia) berjarak sekitar 700 km dari Papua. Pangkalan TNI terdekat di sisi ini adalah Lanud El Tari Kupang dan Merauke.
+4. **Selat Malaka adalah titik temu**: pangkalan Malaysia, Singapura, India, dan Thailand (dengan akses AS) seluruhnya
+   berada dalam 1.000 km dari pantai timur Sumatera. Pemindahan Koarmada I ke Tanjung Pinang menjadi masuk akal.
 
-Jarak cuma satu faktor. Niat politik, jenis alutsista, jangkauan rudal/pesawat, dan aliansi jauh lebih menentukan.
-Angka di sini bahan diskusi, bukan kesimpulan.
+Jarak hanya satu faktor. Niat politik, jenis alutsista, jangkauan rudal/pesawat, dan aliansi jauh lebih menentukan.
+Angka di sini dimaksudkan sebagai bahan diskusi, bukan kesimpulan.
 
-## Struktur repo
+## Struktur repositori
 
 ```
 indonesia-defense-gis/
-├── app.py                  # tampilan Streamlit (baca dari atas ke bawah)
+├── app.py                  # tampilan Streamlit (dibaca dari atas ke bawah)
 ├── src/
 │   ├── muat_data.py        # baca & validasi CSV
-│   ├── geo.py              # haversine, titik terdekat, radius, arah (murni Python, dites)
-│   └── peta.py             # bangun peta Folium per lapisan
+│   ├── geo.py              # haversine, titik terdekat, radius, arah (murni Python, diuji)
+│   └── peta.py             # membangun peta Folium per lapisan
 ├── data/                   # 7 CSV + SUMBER_DATA.md
 ├── tests/test_geo.py       # 11 tes pytest
 ├── docs/
-│   ├── BELAJAR.md          # panduan belajar step by step (GIS, Folium, haversine)
-│   ├── LATIHAN.md          # latihan kecil + kunci jawaban
+│   ├── BELAJAR.md          # panduan belajar bertahap (GIS, Folium, haversine)
+│   ├── LATIHAN.md          # latihan beserta kunci jawaban
 │   └── screenshots/
 └── requirements.txt
 ```
 
-## Belajar dari project ini
+## Belajar dari proyek ini
 
-Baru kenal GIS? Baca [`docs/BELAJAR.md`](docs/BELAJAR.md) dulu (koordinat, lapisan, haversine, cara Folium
-bekerja di dalam Streamlit), lalu kerjakan [`docs/LATIHAN.md`](docs/LATIHAN.md). Nyalakan **Mode belajar** di
-sidebar supaya tiap bagian menunjukkan kode di baliknya.
+Bagi yang baru mengenal GIS, mulailah dari [`docs/BELAJAR.md`](docs/BELAJAR.md) (koordinat, lapisan, haversine, cara
+Folium bekerja di dalam Streamlit), lalu kerjakan [`docs/LATIHAN.md`](docs/LATIHAN.md). Aktifkan **Mode belajar** di
+sidebar agar setiap bagian menampilkan kode di baliknya.
 
-## Rencana berikutnya
+## Rencana pengembangan
 
-- [ ] Tambah poligon ZEE Indonesia dan garis sembilan putus China (GeoJSON) supaya tumpang tindih klaim kelihatan.
-- [ ] Tambah lapisan jangkauan alutsista (mis. radius tempur pesawat dari tiap Lanud).
-- [ ] Ganti CSV dengan GeoJSON + GeoPandas untuk operasi spasial sungguhan (buffer, intersect).
-- [ ] Versi Leaflet.js murni + API FastAPI supaya bisa di-embed di web mana pun.
+- [ ] Menambahkan poligon ZEE Indonesia dan garis sembilan putus China (GeoJSON) agar tumpang tindih klaim terlihat.
+- [ ] Menambahkan lapisan jangkauan alutsista (misalnya radius tempur pesawat dari setiap Lanud).
+- [ ] Mengganti CSV dengan GeoJSON + GeoPandas untuk operasi spasial yang sesungguhnya (buffer, intersect).
+- [ ] Versi Leaflet.js murni + API FastAPI agar dapat disematkan di situs web mana pun.
 - [ ] Deploy ke Streamlit Community Cloud.
 
 ## Lisensi
 
-Kode: MIT. Data: kompilasi dari sumber publik yang disebutkan di tiap baris; gunakan dengan menyebut sumber aslinya.
+Kode: MIT. Data: kompilasi dari sumber publik yang disebutkan pada setiap baris; gunakan dengan menyebut sumber aslinya.

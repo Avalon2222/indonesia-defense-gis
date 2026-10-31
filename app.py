@@ -10,7 +10,7 @@ Alur besar file ini (baca dari atas ke bawah):
   4. Hitung jarak (src/geo.py)
   5. Tampilkan: angka ringkasan -> tab peta / analisis jarak / statistik / data / cara kerja
 
-Tiap bagian punya komentar "APA" dan "KENAPA". Istilah asing ada di docs/BELAJAR.md.
+Setiap bagian diberi komentar "APA" dan "MENGAPA". Penjelasan istilah ada di docs/BELAJAR.md.
 """
 
 import pandas as pd
@@ -51,7 +51,7 @@ def rapikan(fig: go.Figure, tinggi: int = 420) -> go.Figure:
 
 
 # ----------------------------------------------------------------------------
-# 1. MUAT DATA (di-cache: CSV cuma dibaca sekali walau halaman rerun terus)
+# 1. MUAT DATA (di-cache: CSV hanya dibaca sekali meskipun halaman dijalankan ulang)
 # ----------------------------------------------------------------------------
 @st.cache_data
 def ambil_data():
@@ -106,10 +106,10 @@ with st.sidebar:
         help="Peta akan menarik garis ke markas TNI dan pulau terluar terdekat.",
     )
 
-    mode_belajar = st.toggle("🎓 Mode belajar", value=False, help="Tampilkan rumus & potongan kode di tiap bagian.")
+    mode_belajar = st.toggle("🎓 Mode belajar", value=False, help="Tampilkan rumus dan potongan kode di setiap bagian.")
     st.caption("Data publik, koordinat perkiraan. Lihat tab *Data & Sumber*.")
 
-# APA: terapkan filter. KENAPA: df_*_semua tetap utuh supaya angka pembanding tidak ikut berubah.
+# APA: terapkan filter. MENGAPA: df_*_semua tetap utuh agar angka pembanding tidak ikut berubah.
 df_tni = df_tni_semua[df_tni_semua["matra"].isin(matra)]
 df_asing = df_asing_semua[df_asing_semua["negara"].isin(negara_pilihan)]
 
@@ -169,8 +169,8 @@ with tab_peta:
             st.markdown(
                 """
 Peta dibangun di `src/peta.py` dengan **Folium** (pembungkus Python untuk Leaflet.js).
-Polanya selalu sama: bikin `folium.Map`, bikin `FeatureGroup` per lapisan, tambah marker ke grup, lalu
-`LayerControl` supaya user bisa matikan lapisan dari peta.
+Polanya selalu sama: buat `folium.Map`, buat `FeatureGroup` per lapisan, tambahkan marker ke grup, lalu
+`LayerControl` agar pengguna dapat mematikan lapisan langsung dari peta.
 
 ```python
 m = folium.Map(location=[-2, 118], zoom_start=5)
@@ -182,7 +182,7 @@ fg.add_to(m)
 folium.LayerControl().add_to(m)
 ```
 
-Lingkaran jarak pakai `folium.Circle(radius=meter)`: radius dalam **meter**, jadi 500 km = 500.000.
+Lingkaran jarak memakai `folium.Circle(radius=meter)`: radius dalam **meter**, sehingga 500 km = 500.000.
 Di Streamlit, peta ditempel dengan `st_folium(m, returned_objects=[])`.
 """
             )
@@ -194,7 +194,7 @@ with tab_jarak:
     st.subheader("Seberapa dekat tiap pangkalan asing ke wilayah Indonesia?")
     st.markdown(
         "Untuk setiap pangkalan asing dihitung **jarak garis lurus** (great-circle) ke markas TNI terdekat dan ke "
-        "pulau terluar / pos perbatasan terdekat. Angka ini **bukan** penilaian ancaman; cuma geometri."
+        "pulau terluar / pos perbatasan terdekat. Angka ini **bukan** penilaian ancaman, melainkan sekadar geometri."
     )
     tabel_tampil = tabel_jarak[tabel_jarak["nama"].isin(df_asing["nama"])].copy()
     tabel_tampil["negara"] = tabel_tampil["negara_operator"].apply(geo.kelompok_negara)
@@ -264,7 +264,7 @@ with tab_jarak:
     st.info(
         "💡 **Cara baca:** pangkalan di Singapura dan Nicobar (India) secara geografis paling dekat, tapi keduanya negara "
         "mitra. Pos China di Spratly ada di 500–900 km dari Natuna, dan tidak ada markas TNI dalam radius 500 km dari "
-        "pos-pos itu. Jarak hanya satu faktor; niat politik, jenis alutsista, dan aliansi jauh lebih menentukan."
+        "pos-pos tersebut. Jarak hanya satu faktor; niat politik, jenis alutsista, dan aliansi jauh lebih menentukan."
     )
     if mode_belajar:
         with st.expander("🎓 Rumus haversine di balik angka ini"):
@@ -280,7 +280,7 @@ from src import geo
 geo.haversine_km(3.95, 108.38, 9.55, 112.89)   # Ranai -> Fiery Cross Reef ≈ 797 km
 geo.titik_terdekat(9.55, 112.89, df_tni)       # (baris Lanal Ranai, 797.0)
 ```
-Kenapa bukan Pythagoras biasa? Karena bumi bulat: 1° bujur di khatulistiwa ≈ 111 km, di Oslo cuma ≈ 56 km.
+Mengapa bukan Pythagoras biasa? Karena bumi bulat: 1° bujur di khatulistiwa ≈ 111 km, sedangkan di Oslo hanya ≈ 56 km.
 """
             )
 
@@ -342,16 +342,16 @@ with tab_stat:
     st.caption("Sumber: Wikipedia & liputan media; jumlah bisa berbeda dengan data resmi. Belanja militer: SIPRI Military Expenditure Database (pembulatan).")
 
     if mode_belajar:
-        with st.expander("🎓 Kenapa pakai skala log?"):
+        with st.expander("🎓 Mengapa memakai skala log?"):
             st.markdown(
                 """
-Kalau satu nilai 30× lebih besar dari yang lain, grafik biasa (linear) bikin nilai kecil jadi garis tipis.
-Skala logaritmik menjadikan tiap "langkah" sumbu = dikali 10, jadi 5, 50, 500 terlihat berjarak sama.
+Jika satu nilai 30× lebih besar dari yang lain, grafik linear biasa membuat nilai kecil tampak seperti garis tipis.
+Skala logaritmik menjadikan setiap "langkah" sumbu = dikali 10, sehingga 5, 50, dan 500 terlihat berjarak sama.
 
 ```python
 px.bar(df, x="belanja", y="negara", log_x=True)
 ```
-Harganya: pembaca harus sadar sumbunya log, makanya ditulis di judul grafik.
+Konsekuensinya, pembaca harus sadar bahwa sumbunya logaritmik; karena itu ditulis di judul grafik.
 """
             )
 

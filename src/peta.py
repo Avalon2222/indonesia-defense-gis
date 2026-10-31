@@ -70,7 +70,7 @@ def buat_peta(
     if tampil.get("lingkaran") and tampil.get("asing"):
         fg = folium.FeatureGroup(name="Lingkaran jarak dari pangkalan asing", show=True)
         for _, b in df_asing.iterrows():
-            # radius terkecil diisi warna tipis, yang lebih besar cuma garis putus-putus (biar tidak menumpuk)
+            # radius terkecil diisi warna tipis, radius lebih besar hanya garis putus-putus (agar tidak menumpuk)
             for i, r in enumerate(sorted(radius_km)):
                 folium.Circle(
                     location=[b["lat"], b["lon"]],

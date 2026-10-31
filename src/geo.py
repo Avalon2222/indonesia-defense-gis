@@ -2,8 +2,8 @@
 geo.py - Rumus jarak & analisis spasial sederhana
 ==================================================
 Semua fungsi di sini murni Python + pandas: tidak ada Streamlit, tidak ada peta.
-Tujuannya supaya gampang dites (lihat tests/test_geo.py) dan bisa dipakai ulang
-di project lain.
+Tujuannya agar mudah diuji (lihat tests/test_geo.py) dan dapat dipakai ulang
+di proyek lain.
 
 Istilah:
 - Haversine : rumus jarak dua titik di permukaan bola (bumi dianggap bola).
