@@ -8,6 +8,8 @@
 archipelagic sea lanes (ALKI), and foreign military bases in the region with range rings and
 nearest-base analysis. Built with Python, pandas, Folium, Plotly and Streamlit using public data only.*
 
+**🚀 Coba langsung di browser:** [indonesia-defense-gis.streamlit.app](https://indonesia-defense-gis.streamlit.app)
+
 ![Peta utama](docs/screenshots/01_peta.png)
 
 > ℹ️ **Disclaimer.** Seluruh titik dalam proyek ini berasal dari **sumber publik** (Wikipedia, situs resmi, media, laporan
