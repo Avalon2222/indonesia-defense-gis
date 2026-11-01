@@ -80,7 +80,7 @@ with st.sidebar:
     st.title("🛡️ WebGIS Pertahanan")
     st.caption("Peta interaktif markas TNI, perbatasan, dan pangkalan asing di kawasan.")
 
-    st.subheader("Lapisan peta")
+    st.subheader("Map layers")
     tampil = {
         "tni": st.checkbox("Markas TNI", True),
         "pulau": st.checkbox("Pulau terluar & perbatasan", True),
@@ -96,9 +96,9 @@ with st.sidebar:
         sorted(df_asing_semua["negara"].unique()),
         default=sorted(df_asing_semua["negara"].unique()),
     )
-    radius_km = st.multiselect("Radius lingkaran (km)", [250, 500, 1000, 1500], default=[500, 1000])
+    radius_km = st.multiselect("Ring radius (km)", [250, 500, 1000, 1500], default=[500, 1000])
 
-    st.subheader("Analisis jarak")
+    st.subheader("Distance analysis")
     nama_terpilih = st.selectbox(
         "Pilih satu pangkalan asing",
         ["(tidak ada)"] + df_asing_semua.sort_values("nama")["nama"].tolist(),
@@ -106,7 +106,7 @@ with st.sidebar:
         help="Peta akan menarik garis ke markas TNI dan pulau terluar terdekat.",
     )
 
-    mode_belajar = st.toggle("🎓 Mode belajar", value=False, help="Tampilkan rumus dan potongan kode di setiap bagian.")
+    mode_belajar = st.toggle("🎓 Learning mode", value=False, help="Tampilkan rumus dan potongan kode di setiap bagian.")
     st.caption("Data publik, koordinat perkiraan. Lihat tab *Data & Sumber*.")
 
 # APA: terapkan filter. MENGAPA: df_*_semua tetap utuh agar angka pembanding tidak ikut berubah.
@@ -144,7 +144,7 @@ paling_dekat = tabel_jarak.iloc[0]
 k5.metric("Asing terdekat ke batas RI", f"{paling_dekat['jarak_pulau_km']:,} km", help=f"{paling_dekat['nama']} → {paling_dekat['pulau_terdekat']}")
 
 tab_peta, tab_jarak, tab_stat, tab_data, tab_cara = st.tabs(
-    ["🗺️ Peta", "📏 Analisis Jarak", "📊 Statistik", "📋 Data & Sumber", "🧭 Cara Kerja"]
+    ["🗺️ Map", "📏 Distance analysis", "📊 Stats", "📋 Data & Sources", "🧭 How it works"]
 )
 
 # ----------------------------------------------------------------------------
@@ -361,7 +361,7 @@ Konsekuensinya, pembaca harus sadar bahwa sumbunya logaritmik; karena itu dituli
 with tab_data:
     st.subheader("Dataset")
     st.markdown(DISCLAIMER)
-    pilih = st.radio("Pilih tabel", ["Markas TNI", "Pulau terluar & perbatasan", "Pangkalan asing", "ALKI", "Anggaran Indonesia", "Anggaran kawasan", "Alutsista"], horizontal=True)
+    pilih = st.radio("Select table", ["Markas TNI", "Pulau terluar & perbatasan", "Pangkalan asing", "ALKI", "Anggaran Indonesia", "Anggaran kawasan", "Alutsista"], horizontal=True)
     peta_df = {
         "Markas TNI": (df_tni_semua, "markas_tni.csv"),
         "Pulau terluar & perbatasan": (df_pulau, "pulau_terluar_perbatasan.csv"),
@@ -374,7 +374,7 @@ with tab_data:
     df_pilih, nama_file = peta_df[pilih]
     kolom_config = {"url_sumber": st.column_config.LinkColumn("Sumber (link)")} if "url_sumber" in df_pilih.columns else None
     st.dataframe(df_pilih.replace("", "–"), use_container_width=True, hide_index=True, column_config=kolom_config, height=420)
-    st.download_button("⬇️ Unduh CSV", df_pilih.to_csv(index=False).encode("utf-8"), file_name=nama_file, mime="text/csv")
+    st.download_button("⬇️ Download CSV", df_pilih.to_csv(index=False).encode("utf-8"), file_name=nama_file, mime="text/csv")
 
     st.subheader("Catatan kejujuran data")
     st.markdown(

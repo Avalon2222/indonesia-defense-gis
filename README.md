@@ -28,12 +28,12 @@ Geografis berbasis web (WebGIS)** dengan Python: koordinat, lapisan peta, buffer
 
 | Tab | Isi |
 |---|---|
-| 🗺️ Peta | Peta Folium dengan 5 lapisan yang dapat diaktifkan/dinonaktifkan: markas TNI (warna per matra), pulau terluar & pos perbatasan, ALKI I/II/III, pangkalan asing (warna per negara), lingkaran jarak 250/500/1.000/1.500 km. Memilih satu pangkalan asing akan menarik garis ke markas TNI dan batas Indonesia terdekat |
-| 📏 Analisis Jarak | Untuk setiap pangkalan asing: jarak ke pulau terluar terdekat, markas TNI terdekat, arah kompas, serta jumlah markas TNI dalam radius 500 / 1.000 km. Disajikan dalam grafik dan tabel yang dapat diurutkan |
-| 📊 Statistik | Anggaran Kemhan 2015–2026, persentase PDB, belanja militer kawasan (SIPRI 2024) dalam skala logaritmik, dan alutsista utama per matra |
-| 📋 Data & Sumber | Seluruh tabel beserta tautan sumber per baris, unduh CSV, dan catatan keterbatasan data |
-| 🧭 Cara Kerja | Diagram alur data → rumus → peta, beserta konsep GIS yang digunakan |
-| 🎓 Mode belajar | Toggle di sidebar: setiap bagian menampilkan expander berisi rumus (haversine), potongan kode, dan penjelasan |
+| 🗺️ Map | Peta Folium dengan 5 lapisan yang dapat diaktifkan/dinonaktifkan: markas TNI (warna per matra), pulau terluar & pos perbatasan, ALKI I/II/III, pangkalan asing (warna per negara), lingkaran jarak 250/500/1.000/1.500 km. Memilih satu pangkalan asing akan menarik garis ke markas TNI dan batas Indonesia terdekat |
+| 📏 Distance analysis | Untuk setiap pangkalan asing: jarak ke pulau terluar terdekat, markas TNI terdekat, arah kompas, serta jumlah markas TNI dalam radius 500 / 1.000 km. Disajikan dalam grafik dan tabel yang dapat diurutkan |
+| 📊 Stats | Anggaran Kemhan 2015–2026, persentase PDB, belanja militer kawasan (SIPRI 2024) dalam skala logaritmik, dan alutsista utama per matra |
+| 📋 Data & Sources | Seluruh tabel beserta tautan sumber per baris, download CSV, dan catatan keterbatasan data |
+| 🧭 How it works | Diagram alur data → rumus → peta, beserta konsep GIS yang digunakan |
+| 🎓 Learning mode | Toggle di sidebar: setiap bagian menampilkan expander berisi rumus (haversine), potongan kode, dan penjelasan |
 
 ![Analisis jarak](docs/screenshots/02_jarak.png)
 ![Statistik kawasan](docs/screenshots/03b_kawasan.png)
