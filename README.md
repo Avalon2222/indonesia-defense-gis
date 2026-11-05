@@ -6,9 +6,19 @@
 > kawasan**, dilengkapi lingkaran jarak, analisis markas TNI terdekat, dan tab statistik anggaran pertahanan.
 > Dibangun dengan Python, pandas, Folium (Leaflet), Plotly, dan Streamlit.
 
-*An interactive WebGIS of Indonesia's defense geography: TNI bases, outermost islands and border posts,
-archipelagic sea lanes (ALKI), and foreign military bases in the region with range rings and
-nearest-base analysis. Built with Python, pandas, Folium, Plotly and Streamlit using public data only.*
+## 🇬🇧 In English
+
+**Indonesia's defense geography, on one map.** A WebGIS of TNI bases, outermost islands and border posts, the three archipelagic sea lanes (ALKI), and foreign military bases across the region, with range rings and nearest-base analysis. How far is the Spratlys from Natuna? Which TNI base is closest to Darwin? The map answers in seconds.
+
+- **Layer** five toggleable map layers with 250 to 1,500 km range rings.
+- **Analyze** distance and bearing from every foreign base to the nearest Indonesian island and TNI base (haversine).
+- **Read** the defense budget 2015–2026, % of GDP, and regional military spending (SIPRI).
+
+**Built with:** Python, pandas, Folium (Leaflet), Plotly, Streamlit  
+**Data:** Public sources only: Wikipedia, official sites, CSIS AMTI, SIPRI. Coordinates are approximate, not operational  
+**Engineering:** Tested geo-calculation module, CI on GitHub Actions, and a learning mode that walks through the GIS concepts
+
+*The rest of this README is in Indonesian.*
 
 **🚀 Coba langsung di browser:** [indonesia-defense-gis.streamlit.app](https://indonesia-defense-gis.streamlit.app)
 
