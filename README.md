@@ -18,9 +18,16 @@
 **Data:** Public sources only: Wikipedia, official sites, CSIS AMTI, SIPRI. Coordinates are approximate, not operational  
 **Engineering:** Tested geo-calculation module, CI on GitHub Actions, and a learning mode that walks through the GIS concepts
 
+**Sequel:** [Eye of Garuda](https://eye-of-garuda.vercel.app), the same data on a WebGL globe with live aircraft, satellites and ships ([code](https://github.com/Avalon2222/eye-of-garuda)).
+
 *The rest of this README is in Indonesian.*
 
 **🚀 Coba langsung di browser:** [indonesia-defense-gis.streamlit.app](https://indonesia-defense-gis.streamlit.app)
+
+> 🦅 **Versi baru: [Eye of Garuda](https://eye-of-garuda.vercel.app).** Semua lapisan di proyek ini kini ada di konsol globe
+> WebGL yang lebih sinematik, plus pesawat militer live, satelit, kapal AIS, ZEE vs sembilan garis putus, radius tempur,
+> busur impor senjata, dan lini masa insiden. Kode di [Avalon2222/eye-of-garuda](https://github.com/Avalon2222/eye-of-garuda).
+> Proyek ini tetap dipelihara sebagai versi Streamlit yang ringan dan ramah belajar.
 
 ![Peta utama](docs/screenshots/01_peta.png)
 
