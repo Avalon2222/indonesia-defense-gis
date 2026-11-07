@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
 import pandas as pd
 
 RADIUS_BUMI_KM = 6371.0  # jari-jari rata-rata bumi (km)
@@ -61,7 +62,14 @@ def jarak_ke_semua(lat: float, lon: float, df: pd.DataFrame) -> pd.Series:
     Mengembalikan Series dengan index sama seperti df, jadi bisa langsung
     dijadikan kolom baru: df["jarak_km"] = jarak_ke_semua(...).
     """
-    return df.apply(lambda baris: haversine_km(lat, lon, baris["lat"], baris["lon"]), axis=1)
+    # Versi vektor (numpy) dari haversine_km: semua baris dihitung sekaligus,
+    # jauh lebih cepat daripada df.apply baris per baris.
+    lat2 = np.radians(df["lat"].to_numpy(dtype=float))
+    lon2 = np.radians(df["lon"].to_numpy(dtype=float))
+    phi1 = math.radians(lat)
+    a = np.sin((lat2 - phi1) / 2) ** 2 + math.cos(phi1) * np.cos(lat2) * np.sin((lon2 - math.radians(lon)) / 2) ** 2
+    jarak = 2 * RADIUS_BUMI_KM * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+    return pd.Series(jarak, index=df.index, dtype=float)
 
 
 def titik_terdekat(lat: float, lon: float, df: pd.DataFrame) -> tuple[pd.Series, float]:
