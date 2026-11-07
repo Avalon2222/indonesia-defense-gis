@@ -73,3 +73,22 @@ def test_kelompok_negara():
 def test_semua_csv_terbaca():
     for fungsi in (muat_data.muat_alki, muat_data.muat_anggaran_indonesia, muat_data.muat_anggaran_kawasan, muat_data.muat_alutsista):
         assert not fungsi().empty
+
+
+def test_jarak_ke_semua_sama_dengan_haversine_satu_satu():
+    df = muat_data.muat_markas_tni()
+    vektor = geo.jarak_ke_semua(-6.21, 106.85, df)
+    satu_satu = [geo.haversine_km(-6.21, 106.85, la, lo) for la, lo in zip(df["lat"], df["lon"])]
+    assert vektor.index.equals(df.index)
+    assert vektor.tolist() == pytest.approx(satu_satu)
+
+
+def test_jarak_ke_semua_df_kosong():
+    import pandas as pd
+    hasil = geo.jarak_ke_semua(0, 0, pd.DataFrame(columns=["lat", "lon"]))
+    assert hasil.empty and hasil.dtype == float
+
+
+def test_arah_kompas_diagonal():
+    assert geo.arah_kompas(0, 100, 5, 105) == "TL"
+    assert geo.arah_kompas(0, 100, -5, 95) == "BD"
