@@ -47,3 +47,24 @@ def test_legenda_memuat_semua_kategori():
     html = peta.legenda_html()
     for label in list(peta.WARNA_MATRA) + list(peta.WARNA_NEGARA) + list(peta.LABEL_PULAU.values()):
         assert label in html
+
+
+def test_popup_escape_html_dan_lewati_kosong():
+    import numpy as np
+    import pandas as pd
+
+    b = pd.Series({"nama": "Andaman & Nicobar", "jenis": "gabungan", "keterangan": "", "status": np.nan,
+                   "sumber": "Wikipedia", "url_sumber": "https://contoh.org/a?b=1&c=2"})
+    h = peta._popup(b["nama"], b, [("Jenis", "jenis"), ("Status", "status"), ("Catatan", "keterangan")])
+    assert "Andaman &amp; Nicobar" in h
+    assert "<b>Jenis:</b> gabungan" in h
+    assert "Status" not in h and "Catatan" not in h and "nan" not in h
+    assert 'href="https://contoh.org/a?b=1&amp;c=2"' in h
+
+
+def test_popup_tanpa_link_tampilkan_nama_sumber_saja():
+    import pandas as pd
+
+    b = pd.Series({"nama": "Pos A", "sumber": "Kemhan", "url_sumber": ""})
+    h = peta._popup("Pos A", b, [])
+    assert "<a " not in h and "<i>Kemhan</i>" in h

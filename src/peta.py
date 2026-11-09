@@ -6,6 +6,8 @@ Fungsi di sini mengembalikan folium.Map; app.py tinggal menampilkannya.
 
 from __future__ import annotations
 
+import html
+
 import folium
 import pandas as pd
 
@@ -33,10 +35,18 @@ WARNA_ALKI = {"ALKI I": "#0288d1", "ALKI II": "#0097a7", "ALKI III": "#00796b"}
 
 def _popup(judul: str, baris: pd.Series, kolom: list[tuple[str, str]]) -> str:
     """HTML kecil untuk popup: judul tebal + daftar label: nilai + link sumber."""
-    isi = "".join(f"<b>{label}:</b> {baris[k]}<br>" for label, k in kolom if str(baris.get(k, "")).strip())
-    link = baris.get("url_sumber", "")
-    sumber = f'<a href="{link}" target="_blank">{baris.get("sumber", "sumber")}</a>' if link else baris.get("sumber", "")
-    return f"<div style='font-family:sans-serif;font-size:12px;min-width:200px'><b style='font-size:13px'>{judul}</b><br>{isi}<i>{sumber}</i></div>"
+    isi = "".join(f"<b>{label}:</b> {_aman(baris[k])}<br>" for label, k in kolom if _aman(baris.get(k, "")))
+    link = _aman(baris.get("url_sumber", ""))
+    nama_sumber = _aman(baris.get("sumber", ""))
+    sumber = f'<a href="{link}" target="_blank">{nama_sumber or "sumber"}</a>' if link else nama_sumber
+    return f"<div style='font-family:sans-serif;font-size:12px;min-width:200px'><b style='font-size:13px'>{_aman(judul)}</b><br>{isi}<i>{sumber}</i></div>"
+
+
+def _aman(nilai) -> str:
+    """Teks siap tempel ke HTML: NaN/None jadi kosong, karakter seperti & dan < di-escape."""
+    if nilai is None or (isinstance(nilai, float) and pd.isna(nilai)):
+        return ""
+    return html.escape(str(nilai).strip())
 
 
 def buat_peta(
