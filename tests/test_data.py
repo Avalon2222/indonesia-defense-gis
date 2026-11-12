@@ -66,3 +66,11 @@ def test_pangkalan_asing_dikelompokkan_per_negara():
     asing = muat_data.muat_pangkalan_asing()
     assert asing["negara"].str.strip().ne("").all()
     assert asing["url_sumber"].str.startswith("http").all()
+
+
+def test_baca_isi_kolom_teks_kosong(tmp_path, monkeypatch):
+    (tmp_path / "uji.csv").write_text("nama,catatan,lat,lon\nNatuna,,3.9,108.4\nSabang,pelabuhan,5.9,95.3\n")
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data._baca("uji.csv")
+    assert df["catatan"].tolist() == ["", "pelabuhan"]
+    assert df["lat"].dtype == float  # kolom angka tidak disentuh

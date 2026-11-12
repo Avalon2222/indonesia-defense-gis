@@ -1,5 +1,8 @@
 """Tes penyusunan peta Folium. Jalankan: python -m pytest tests/ -v"""
 
+import pandas as pd
+import pytest
+
 from src import muat_data, peta
 
 SEMUA_LAPISAN = {"tni": True, "pulau": True, "alki": True, "asing": True, "lingkaran": True}
@@ -68,3 +71,16 @@ def test_popup_tanpa_link_tampilkan_nama_sumber_saja():
     b = pd.Series({"nama": "Pos A", "sumber": "Kemhan", "url_sumber": ""})
     h = peta._popup("Pos A", b, [])
     assert "<a " not in h and "<i>Kemhan</i>" in h
+
+
+@pytest.mark.parametrize("nilai, harapan", [
+    (None, ""),
+    (float("nan"), ""),
+    (pd.NA, ""),
+    (pd.NaT, ""),
+    ("  Lanud <Halim> & co  ", "Lanud &lt;Halim&gt; &amp; co"),
+    (1996, "1996"),
+    (0, "0"),
+])
+def test_aman(nilai, harapan):
+    assert peta._aman(nilai) == harapan
