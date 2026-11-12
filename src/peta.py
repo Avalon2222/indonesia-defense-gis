@@ -44,7 +44,7 @@ def _popup(judul: str, baris: pd.Series, kolom: list[tuple[str, str]]) -> str:
 
 def _aman(nilai) -> str:
     """Teks siap tempel ke HTML: NaN/None jadi kosong, karakter seperti & dan < di-escape."""
-    if nilai is None or (isinstance(nilai, float) and pd.isna(nilai)):
+    if nilai is None or (pd.api.types.is_scalar(nilai) and pd.isna(nilai)):  # NaN, pd.NA, NaT
         return ""
     return html.escape(str(nilai).strip())
 
