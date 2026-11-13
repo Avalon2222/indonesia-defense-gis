@@ -109,3 +109,24 @@ def test_titik_terdekat_lewati_koordinat_kosong():
     assert baris["nama"] == "Batam" and jarak == pytest.approx(0)
     with pytest.raises(ValueError, match="koordinat lengkap"):
         geo.titik_terdekat(1.1, 104.0, df.iloc[[0]])
+
+
+@pytest.mark.parametrize("teks, label", [
+    ("Amerika Serikat (Marinir rotasi)", "Amerika Serikat"),
+    ("china", "China"),
+    ("Singapura", "Singapura"),
+    ("Malaysia", "Malaysia"),
+    ("Filipina (+ AS EDCA)", "Filipina"),
+    ("Vietnam", "Vietnam"),
+    ("India (Komando Andaman)", "India"),
+    ("Inggris", "Lainnya"),
+])
+def test_kelompok_negara_semua_cabang(teks, label):
+    assert geo.kelompok_negara(teks) == label
+
+
+def test_kelompok_negara_data_asli_tidak_banyak_lainnya():
+    asing = muat_data.muat_pangkalan_asing()
+    label = asing["negara_operator"].map(geo.kelompok_negara)
+    # Sebagian besar pangkalan harus masuk kelompok negara yang punya warna sendiri di peta.
+    assert (label == "Lainnya").mean() < 0.25
