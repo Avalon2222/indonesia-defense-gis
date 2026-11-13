@@ -1,5 +1,7 @@
 """Tes rumus jarak dan validitas data. Jalankan: python -m pytest tests/ -v"""
 
+import numpy as np
+import pandas as pd
 import pytest
 
 from src import geo, muat_data
@@ -92,3 +94,18 @@ def test_jarak_ke_semua_df_kosong():
 def test_arah_kompas_diagonal():
     assert geo.arah_kompas(0, 100, 5, 105) == "TL"
     assert geo.arah_kompas(0, 100, -5, 95) == "BD"
+
+
+def test_tabel_jarak_tanpa_pangkalan_asing():
+    asing = muat_data.muat_pangkalan_asing().iloc[0:0]
+    tabel = geo.tabel_jarak(asing, muat_data.muat_markas_tni(), muat_data.muat_pulau_terluar())
+    assert tabel.empty
+    assert {"nama", "tni_terdekat", "jarak_pulau_km", "jumlah_tni_1000km"} <= set(tabel.columns)
+
+
+def test_titik_terdekat_lewati_koordinat_kosong():
+    df = pd.DataFrame({"nama": ["tanpa koordinat", "Batam"], "lat": [np.nan, 1.1], "lon": [np.nan, 104.0]})
+    baris, jarak = geo.titik_terdekat(1.1, 104.0, df)
+    assert baris["nama"] == "Batam" and jarak == pytest.approx(0)
+    with pytest.raises(ValueError, match="koordinat lengkap"):
+        geo.titik_terdekat(1.1, 104.0, df.iloc[[0]])
