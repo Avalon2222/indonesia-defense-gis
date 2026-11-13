@@ -74,3 +74,17 @@ def test_baca_isi_kolom_teks_kosong(tmp_path, monkeypatch):
     df = muat_data._baca("uji.csv")
     assert df["catatan"].tolist() == ["", "pelabuhan"]
     assert df["lat"].dtype == float  # kolom angka tidak disentuh
+
+
+def test_kolom_teks_kenali_object_dan_string():
+    import numpy as np
+
+    assert muat_data._kolom_teks(pd.Series(["a", None], dtype=object))
+    assert muat_data._kolom_teks(pd.Series(["a", None], dtype="string"))
+    assert not muat_data._kolom_teks(pd.Series([1.0, np.nan]))
+
+
+def test_pulau_terluar_unik_dan_di_indonesia():
+    pulau = muat_data.muat_pulau_terluar()
+    assert not pulau["nama"].duplicated().any()
+    assert pulau["lat"].between(-11.5, 6.5).all() and pulau["lon"].between(94.5, 141.5).all()
