@@ -88,3 +88,12 @@ def test_pulau_terluar_unik_dan_di_indonesia():
     pulau = muat_data.muat_pulau_terluar()
     assert not pulau["nama"].duplicated().any()
     assert pulau["lat"].between(-11.5, 6.5).all() and pulau["lon"].between(94.5, 141.5).all()
+
+
+def test_pangkalan_asing_koordinat_valid_dan_unik():
+    asing = muat_data.muat_pangkalan_asing()
+    assert asing["lat"].between(-90, 90).all() and asing["lon"].between(-180, 180).all()
+    assert not asing["nama"].duplicated().any()
+    # Pangkalan asing tidak boleh jatuh di daratan utama Jawa (cek kasar salah ketik tanda lat/lon).
+    jawa = asing["lat"].between(-8.8, -5.8) & asing["lon"].between(105.0, 114.6)
+    assert not jawa.any()
