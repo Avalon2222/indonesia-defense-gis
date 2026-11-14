@@ -122,8 +122,10 @@ def tabel_jarak(df_asing: pd.DataFrame, df_tni: pd.DataFrame, df_pulau: pd.DataF
 
 def kelompok_negara(negara_operator: str) -> str:
     """Sederhanakan teks operator ("Australia (+ AS rotasi)") jadi satu label negara utama."""
-    teks = negara_operator.lower()
-    if teks.startswith("amerika"):
+    if not isinstance(negara_operator, str):
+        return "Lainnya"  # sel kosong (NaN) di CSV
+    teks = negara_operator.strip().lower()
+    if teks.startswith(("amerika", "as ")) or teks == "as":
         return "Amerika Serikat"
     if teks.startswith("australia"):
         return "Australia"
