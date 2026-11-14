@@ -84,3 +84,10 @@ def test_popup_tanpa_link_tampilkan_nama_sumber_saja():
 ])
 def test_aman(nilai, harapan):
     assert peta._aman(nilai) == harapan
+
+
+def test_popup_hanya_menautkan_url_http():
+    b = pd.Series({"nama": "Pos B", "sumber": "Catatan", "url_sumber": "javascript:alert(1)"})
+    h = peta._popup("Pos B", b, [])
+    assert "<a " not in h and "javascript" not in h
+    assert "<i>Catatan</i>" in h

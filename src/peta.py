@@ -38,7 +38,9 @@ def _popup(judul: str, baris: pd.Series, kolom: list[tuple[str, str]]) -> str:
     isi = "".join(f"<b>{label}:</b> {_aman(baris[k])}<br>" for label, k in kolom if _aman(baris.get(k, "")))
     link = _aman(baris.get("url_sumber", ""))
     nama_sumber = _aman(baris.get("sumber", ""))
-    sumber = f'<a href="{link}" target="_blank">{nama_sumber or "sumber"}</a>' if link else nama_sumber
+    # Hanya tautan http(s) yang dijadikan link; skema lain (javascript:, data:) ditampilkan sebagai teks biasa.
+    aman_ditaut = link.lower().startswith(("http://", "https://"))
+    sumber = f'<a href="{link}" target="_blank">{nama_sumber or "sumber"}</a>' if aman_ditaut else nama_sumber
     return f"<div style='font-family:sans-serif;font-size:12px;min-width:200px'><b style='font-size:13px'>{_aman(judul)}</b><br>{isi}<i>{sumber}</i></div>"
 
 
