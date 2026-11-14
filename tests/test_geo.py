@@ -130,3 +130,15 @@ def test_kelompok_negara_data_asli_tidak_banyak_lainnya():
     label = asing["negara_operator"].map(geo.kelompok_negara)
     # Sebagian besar pangkalan harus masuk kelompok negara yang punya warna sendiri di peta.
     assert (label == "Lainnya").mean() < 0.25
+
+
+@pytest.mark.parametrize("teks, label", [
+    ("  Australia", "Australia"),
+    ("AS (Diego Garcia)", "Amerika Serikat"),
+    ("AS", "Amerika Serikat"),
+    ("Asia Tenggara", "Lainnya"),
+    (float("nan"), "Lainnya"),
+    (None, "Lainnya"),
+])
+def test_kelompok_negara_spasi_singkatan_dan_kosong(teks, label):
+    assert geo.kelompok_negara(teks) == label
