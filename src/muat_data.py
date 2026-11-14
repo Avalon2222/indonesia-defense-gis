@@ -64,6 +64,10 @@ def muat_alutsista() -> pd.DataFrame:
 
 def _validasi_koordinat(df: pd.DataFrame, nama: str) -> None:
     """Semua titik Indonesia harus berada di kotak kasar wilayah Indonesia."""
+    kosong = df[df["lat"].isna() | df["lon"].isna()]
+    if not kosong.empty:
+        # NaN selalu lolos perbandingan < dan >, jadi harus dicek terpisah.
+        raise ValueError(f"{nama}: koordinat kosong -> {kosong['nama'].tolist()}")
     salah = df[(df["lat"] < -11.5) | (df["lat"] > 6.5) | (df["lon"] < 94.5) | (df["lon"] > 141.5)]
     if not salah.empty:
         raise ValueError(f"{nama}: koordinat di luar Indonesia -> {salah['nama'].tolist()}")
