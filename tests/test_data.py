@@ -97,3 +97,9 @@ def test_pangkalan_asing_koordinat_valid_dan_unik():
     # Pangkalan asing tidak boleh jatuh di daratan utama Jawa (cek kasar salah ketik tanda lat/lon).
     jawa = asing["lat"].between(-8.8, -5.8) & asing["lon"].between(105.0, 114.6)
     assert not jawa.any()
+
+
+def test_validasi_koordinat_menangkap_titik_tanpa_koordinat():
+    df = pd.DataFrame({"nama": ["Merauke", "Pos Baru"], "lat": [-8.5, None], "lon": [140.4, 120.0]})
+    with pytest.raises(ValueError, match="Pos Baru"):
+        muat_data._validasi_koordinat(df, "uji.csv")
