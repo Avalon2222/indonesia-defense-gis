@@ -78,6 +78,10 @@ def buat_peta(
     ).add_to(m)
     folium.TileLayer("OpenStreetMap", name="Peta dasar: OpenStreetMap", show=False).add_to(m)
 
+    # Pangkalan asing tidak divalidasi koordinatnya saat dimuat (letaknya di luar Indonesia), jadi baris
+    # tanpa lat/lon dibuang di sini. Folium menolak lokasi NaN dan seluruh peta gagal digambar.
+    df_asing = df_asing.dropna(subset=["lat", "lon"])
+
     # --- Lapisan 1: lingkaran jarak (digambar dulu supaya di bawah titik) ---
     if tampil.get("lingkaran") and tampil.get("asing"):
         fg = folium.FeatureGroup(name="Lingkaran jarak dari pangkalan asing", show=True)
