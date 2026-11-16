@@ -35,6 +35,9 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 
     # 2. rumus haversine
     a = math.sin(d_phi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lambda / 2) ** 2
+    # Galat pembulatan bisa membuat a sedikit di atas 1 untuk titik yang hampir berseberangan
+    # (antipoda), dan sqrt(1 - a) lalu gagal dengan "math domain error".
+    a = min(max(a, 0.0), 1.0)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     # 3. sudut pusat (radian) x jari-jari = panjang busur
@@ -68,6 +71,7 @@ def jarak_ke_semua(lat: float, lon: float, df: pd.DataFrame) -> pd.Series:
     lon2 = np.radians(df["lon"].to_numpy(dtype=float))
     phi1 = math.radians(lat)
     a = np.sin((lat2 - phi1) / 2) ** 2 + math.cos(phi1) * np.cos(lat2) * np.sin((lon2 - math.radians(lon)) / 2) ** 2
+    a = np.clip(a, 0.0, 1.0)  # sama seperti haversine_km: cegah NaN di titik antipoda
     jarak = 2 * RADIUS_BUMI_KM * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
     return pd.Series(jarak, index=df.index, dtype=float)
 
