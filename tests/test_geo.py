@@ -159,3 +159,8 @@ def test_tabel_jarak_lewati_pangkalan_tanpa_koordinat():
     tabel = geo.tabel_jarak(asing, muat_data.muat_markas_tni(), muat_data.muat_pulau_terluar())
     assert len(tabel) == 2
     assert asing["nama"].iloc[0] not in set(tabel["nama"])
+
+
+def test_arah_kompas_koordinat_kosong():
+    assert geo.arah_kompas(float("nan"), 100, 5, 100) == ""
+    assert geo.arah_kompas(0, 100, None, 100) == ""
