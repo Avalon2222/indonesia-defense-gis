@@ -49,7 +49,11 @@ def arah_kompas(lat1: float, lon1: float, lat2: float, lon2: float) -> str:
 
     >>> arah_kompas(0, 100, 5, 100)   # ke utara
     'U'
+
+    Koordinat kosong (NaN/None) menghasilkan string kosong, bukan ValueError dari int(NaN).
     """
+    if any(v is None or v != v for v in (lat1, lon1, lat2, lon2)):
+        return ""
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
     d_lambda = math.radians(lon2 - lon1)
     x = math.sin(d_lambda) * math.cos(phi2)
