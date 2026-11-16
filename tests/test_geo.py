@@ -164,3 +164,7 @@ def test_tabel_jarak_lewati_pangkalan_tanpa_koordinat():
 def test_arah_kompas_koordinat_kosong():
     assert geo.arah_kompas(float("nan"), 100, 5, 100) == ""
     assert geo.arah_kompas(0, 100, None, 100) == ""
+
+
+def test_arah_kompas_titik_sama_tanpa_arah():
+    assert geo.arah_kompas(-6.2, 106.8, -6.2, 106.8) == "-"
