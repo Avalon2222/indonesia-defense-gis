@@ -82,6 +82,8 @@ def buat_peta(
     # tanpa lat/lon dibuang di sini. Folium menolak lokasi NaN dan seluruh peta gagal digambar.
     df_asing = df_asing.dropna(subset=["lat", "lon"])
 
+    # Tooltip Leaflet dirender sebagai HTML, jadi nama dari CSV di-escape sama seperti isi popup.
+
     # --- Lapisan 1: lingkaran jarak (digambar dulu supaya di bawah titik) ---
     if tampil.get("lingkaran") and tampil.get("asing"):
         fg = folium.FeatureGroup(name="Lingkaran jarak dari pangkalan asing", show=True)
@@ -97,7 +99,7 @@ def buat_peta(
                     fill_opacity=0.07,
                     opacity=0.6 if i == 0 else 0.35,
                     dash_array=None if i == 0 else "4 6",
-                    tooltip=f"{b['nama']} – radius {r} km",
+                    tooltip=f"{_aman(b['nama'])} – radius {r} km",
                 ).add_to(fg)
         fg.add_to(m)
 
@@ -107,7 +109,7 @@ def buat_peta(
         for nama, grup in df_alki.groupby("alki"):
             titik = grup[["lat", "lon"]].values.tolist()
             folium.PolyLine(titik, color=WARNA_ALKI[nama], weight=3, opacity=0.7, dash_array="10 8",
-                            tooltip=f"{nama} (ilustrasi, bukan koordinat resmi)").add_to(fg)
+                            tooltip=f"{_aman(nama)} (ilustrasi, bukan koordinat resmi)").add_to(fg)
             folium.Marker(titik[0], icon=folium.DivIcon(html=f"<div style='font-size:11px;font-weight:bold;color:{WARNA_ALKI[nama]}'>{nama}</div>")).add_to(fg)
         fg.add_to(m)
 
@@ -123,7 +125,7 @@ def buat_peta(
                 fill_color=WARNA_PULAU[b["jenis"]],
                 fill_opacity=0.9,
                 popup=folium.Popup(_popup(b["nama"], b, [("Jenis", "jenis"), ("Provinsi", "provinsi"), ("Berbatasan dengan", "berbatasan_dengan"), ("Catatan", "keterangan")]), max_width=300),
-                tooltip=f"{LABEL_PULAU[b['jenis']]}: {b['nama']}",
+                tooltip=f"{LABEL_PULAU[b['jenis']]}: {_aman(b['nama'])}",
             ).add_to(fg)
         fg.add_to(m)
 
@@ -140,7 +142,7 @@ def buat_peta(
                 fill_color=WARNA_MATRA[b["matra"]],
                 fill_opacity=0.95,
                 popup=folium.Popup(_popup(b["nama"], b, [("Matra", "matra"), ("Jenis", "jenis"), ("Lokasi", "kota"), ("Catatan", "keterangan")]), max_width=300),
-                tooltip=f"TNI {b['matra']}: {b['nama']}",
+                tooltip=f"TNI {_aman(b['matra'])}: {_aman(b['nama'])}",
             ).add_to(fg)
         fg.add_to(m)
 
@@ -156,7 +158,7 @@ def buat_peta(
                     html=f"<div style='width:16px;height:16px;transform:rotate(45deg);background:{WARNA_NEGARA.get(b['negara'], '#757575')};border:2px solid white;box-shadow:0 0 3px #333'></div>",
                 ),
                 popup=folium.Popup(_popup(b["nama"], b, [("Operator", "negara_operator"), ("Lokasi", "negara_tuan_rumah"), ("Jenis", "jenis"), ("Status", "status"), ("Catatan", "keterangan")]), max_width=320),
-                tooltip=f"{b['negara']}: {b['nama']}",
+                tooltip=f"{_aman(b['negara'])}: {_aman(b['nama'])}",
             ).add_to(fg)
         fg.add_to(m)
 
@@ -164,11 +166,11 @@ def buat_peta(
     if terpilih is not None:
         fg = folium.FeatureGroup(name="Analisis jarak (pangkalan terpilih)", show=True)
         folium.CircleMarker([terpilih["lat"], terpilih["lon"]], radius=14, color="#000", weight=2, fill=False,
-                            tooltip=f"Terpilih: {terpilih['nama']}").add_to(fg)
+                            tooltip=f"Terpilih: {_aman(terpilih['nama'])}").add_to(fg)
         for target, warna, label in ((tni_terdekat, "#1565c0", "Markas TNI terdekat"), (pulau_terdekat, "#00897b", "Pulau terluar/perbatasan terdekat")):
             if target is not None:
                 folium.PolyLine([[terpilih["lat"], terpilih["lon"]], [target["lat"], target["lon"]]],
-                                color=warna, weight=3, opacity=0.9, tooltip=f"{label}: {target['nama']}").add_to(fg)
+                                color=warna, weight=3, opacity=0.9, tooltip=f"{label}: {_aman(target['nama'])}").add_to(fg)
         fg.add_to(m)
 
     folium.LayerControl(collapsed=True).add_to(m)
