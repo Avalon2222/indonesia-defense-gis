@@ -100,3 +100,13 @@ def test_peta_lewati_pangkalan_asing_tanpa_koordinat():
     m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500])
     html = m.get_root().render()
     assert asing.iloc[1]["nama"] in html
+
+
+def test_tooltip_escape_nama():
+    tni, pulau, alki, asing = _data()
+    asing = asing.copy()
+    asing.loc[asing.index[0], "nama"] = "Pangkalan <b>Uji</b> & Co"
+    m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500], terpilih=asing.iloc[0])
+    html = m.get_root().render()
+    assert "<b>Uji</b>" not in html
+    assert "Pangkalan &lt;b&gt;Uji&lt;/b&gt; &amp; Co" in html
