@@ -101,7 +101,8 @@ def tabel_jarak(df_asing: pd.DataFrame, df_tni: pd.DataFrame, df_pulau: pd.DataF
     Diurutkan dari yang paling dekat ke pulau terluar.
     """
     hasil = []
-    for _, p in df_asing.iterrows():
+    # Pangkalan tanpa koordinat lengkap dilewati supaya satu baris rusak tidak menggagalkan seluruh tabel.
+    for _, p in df_asing.dropna(subset=["lat", "lon"]).iterrows():
         tni, jarak_tni = titik_terdekat(p["lat"], p["lon"], df_tni)
         pulau, jarak_pulau = titik_terdekat(p["lat"], p["lon"], df_pulau)
         hasil.append(
