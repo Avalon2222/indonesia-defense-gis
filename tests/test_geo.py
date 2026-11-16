@@ -142,3 +142,20 @@ def test_kelompok_negara_data_asli_tidak_banyak_lainnya():
 ])
 def test_kelompok_negara_spasi_singkatan_dan_kosong(teks, label):
     assert geo.kelompok_negara(teks) == label
+
+
+def test_haversine_titik_antipoda_tidak_error():
+    # Contoh nyata yang dulu memicu "math domain error" karena a sedikit di atas 1.
+    lat, lon = -18.718240534908475, -38.31958713665131
+    setengah_keliling = np.pi * geo.RADIUS_BUMI_KM
+    assert geo.haversine_km(lat, lon, -lat, lon + 180) == pytest.approx(setengah_keliling)
+    df = pd.DataFrame({"lat": [-lat], "lon": [lon + 180]})
+    assert geo.jarak_ke_semua(lat, lon, df).iloc[0] == pytest.approx(setengah_keliling)
+
+
+def test_tabel_jarak_lewati_pangkalan_tanpa_koordinat():
+    asing = muat_data.muat_pangkalan_asing().head(3).copy()
+    asing.loc[asing.index[0], ["lat", "lon"]] = np.nan
+    tabel = geo.tabel_jarak(asing, muat_data.muat_markas_tni(), muat_data.muat_pulau_terluar())
+    assert len(tabel) == 2
+    assert asing["nama"].iloc[0] not in set(tabel["nama"])
