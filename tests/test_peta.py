@@ -91,3 +91,12 @@ def test_popup_hanya_menautkan_url_http():
     h = peta._popup("Pos B", b, [])
     assert "<a " not in h and "javascript" not in h
     assert "<i>Catatan</i>" in h
+
+
+def test_peta_lewati_pangkalan_asing_tanpa_koordinat():
+    tni, pulau, alki, asing = _data()
+    asing = asing.copy()
+    asing.loc[asing.index[0], "lat"] = float("nan")
+    m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500])
+    html = m.get_root().render()
+    assert asing.iloc[1]["nama"] in html
