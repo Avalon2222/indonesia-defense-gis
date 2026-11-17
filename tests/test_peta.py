@@ -123,3 +123,13 @@ def test_kategori_baru_tanpa_warna_tidak_bikin_peta_gagal():
     html = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500]).get_root().render()
     assert peta.WARNA_CADANGAN in html
     assert "pulau_kecil_baru" in html
+
+
+def test_label_alki_di_escape():
+    tni, pulau, alki, asing = _data()
+    alki = alki.copy()
+    alki["alki"] = "ALKI <i>X</i>"
+    html = peta.buat_peta(tni, pulau, alki, asing, {"alki": True}, [500]).get_root().render()
+    # DivIcon menyimpan HTML-nya sebagai string JSON, jadi tag mentah muncul sebagai \u003ci\u003e.
+    assert "<i>X</i>" not in html
+    assert "\\u003ci\\u003eX" not in html

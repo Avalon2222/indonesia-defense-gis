@@ -112,7 +112,7 @@ def buat_peta(
             titik = grup[["lat", "lon"]].values.tolist()
             folium.PolyLine(titik, color=WARNA_ALKI.get(nama, WARNA_CADANGAN), weight=3, opacity=0.7, dash_array="10 8",
                             tooltip=f"{_aman(nama)} (ilustrasi, bukan koordinat resmi)").add_to(fg)
-            folium.Marker(titik[0], icon=folium.DivIcon(html=f"<div style='font-size:11px;font-weight:bold;color:{WARNA_ALKI.get(nama, WARNA_CADANGAN)}'>{nama}</div>")).add_to(fg)
+            folium.Marker(titik[0], icon=folium.DivIcon(html=f"<div style='font-size:11px;font-weight:bold;color:{WARNA_ALKI.get(nama, WARNA_CADANGAN)}'>{_aman(nama)}</div>")).add_to(fg)
         fg.add_to(m)
 
     # --- Lapisan 3: pulau terluar, pos perbatasan, wilayah rawan ---
