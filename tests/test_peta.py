@@ -110,3 +110,16 @@ def test_tooltip_escape_nama():
     html = m.get_root().render()
     assert "<b>Uji</b>" not in html
     assert "Pangkalan &lt;b&gt;Uji&lt;/b&gt; &amp; Co" in html
+
+
+def test_kategori_baru_tanpa_warna_tidak_bikin_peta_gagal():
+    tni, pulau, alki, asing = _data()
+    tni = tni.copy()
+    pulau = pulau.copy()
+    alki = alki.copy()
+    tni.loc[tni.index[0], "matra"] = "Siber"
+    pulau.loc[pulau.index[0], "jenis"] = "pulau_kecil_baru"
+    alki.loc[alki.index[0], "alki"] = "ALKI IV"
+    html = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500]).get_root().render()
+    assert peta.WARNA_CADANGAN in html
+    assert "pulau_kecil_baru" in html
