@@ -54,7 +54,12 @@ def arah_kompas(lat1: float, lon1: float, lat2: float, lon2: float) -> str:
     Koordinat kosong (NaN/None) menghasilkan string kosong, bukan ValueError dari int(NaN).
     Dua titik yang sama menghasilkan "-".
     """
-    if any(v is None or v != v for v in (lat1, lon1, lat2, lon2)):
+    # float() juga menolak pd.NA, yang tidak bisa dipakai di perbandingan "v != v".
+    try:
+        lat1, lon1, lat2, lon2 = (float(v) for v in (lat1, lon1, lat2, lon2))
+    except (TypeError, ValueError):
+        return ""
+    if any(math.isnan(v) for v in (lat1, lon1, lat2, lon2)):
         return ""
     if lat1 == lat2 and lon1 == lon2:
         return "-"   # titik yang sama tidak punya arah; atan2(0, 0) akan keliru memberi "U"
