@@ -13,6 +13,7 @@ Istilah:
 from __future__ import annotations
 
 import math
+import re
 
 import numpy as np
 import pandas as pd
@@ -137,11 +138,12 @@ def kelompok_negara(negara_operator: str) -> str:
     if not isinstance(negara_operator, str):
         return "Lainnya"  # sel kosong (NaN) di CSV
     teks = negara_operator.strip().lower()
-    if teks.startswith(("amerika", "as ")) or teks == "as":
+    # "AS/Inggris", "AS (rotasi)", "AS," semuanya Amerika Serikat; "ASEAN" bukan.
+    if teks.startswith("amerika") or re.match(r"as\b", teks):
         return "Amerika Serikat"
     if teks.startswith("australia"):
         return "Australia"
-    if teks.startswith("china"):
+    if teks.startswith(("china", "tiongkok", "rrt")):
         return "China"
     if teks.startswith("singapura"):
         return "Singapura"
