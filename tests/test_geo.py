@@ -1,5 +1,7 @@
 """Tes rumus jarak dan validitas data. Jalankan: python -m pytest tests/ -v"""
 
+import math
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -183,3 +185,9 @@ def test_arah_kompas_koordinat_pd_na():
     assert geo.arah_kompas(pd.NA, 100, 5, 100) == ""
     assert geo.arah_kompas(0, 100, 5, pd.NA) == ""
     assert geo.arah_kompas(np.float64(0), 100, np.float64(5), 100) == "U"
+
+
+@pytest.mark.parametrize("kosong", [None, pd.NA, float("nan")])
+def test_haversine_koordinat_kosong_jadi_nan(kosong):
+    assert math.isnan(geo.haversine_km(kosong, 106.85, 1.35, 103.82))
+    assert math.isnan(geo.haversine_km(-6.21, 106.85, 1.35, kosong))
