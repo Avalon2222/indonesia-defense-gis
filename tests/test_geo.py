@@ -168,3 +168,12 @@ def test_arah_kompas_koordinat_kosong():
 
 def test_arah_kompas_titik_sama_tanpa_arah():
     assert geo.arah_kompas(-6.2, 106.8, -6.2, 106.8) == "-"
+
+
+def test_kelompok_negara_singkatan_as_dan_tiongkok():
+    assert geo.kelompok_negara("AS/Inggris (AUKUS)") == "Amerika Serikat"
+    assert geo.kelompok_negara("AS (rotasi)") == "Amerika Serikat"
+    assert geo.kelompok_negara("AS") == "Amerika Serikat"
+    assert geo.kelompok_negara("ASEAN") == "Lainnya"
+    assert geo.kelompok_negara("Tiongkok") == "China"
+    assert geo.kelompok_negara("RRT (PLAN)") == "China"
