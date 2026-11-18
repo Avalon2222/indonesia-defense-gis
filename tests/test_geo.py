@@ -191,3 +191,9 @@ def test_arah_kompas_koordinat_pd_na():
 def test_haversine_koordinat_kosong_jadi_nan(kosong):
     assert math.isnan(geo.haversine_km(kosong, 106.85, 1.35, 103.82))
     assert math.isnan(geo.haversine_km(-6.21, 106.85, 1.35, kosong))
+
+
+def test_titik_terdekat_koordinat_asal_kosong_pesannya_jelas():
+    df = pd.DataFrame({"nama": ["A"], "lat": [1.0], "lon": [104.0]})
+    with pytest.raises(ValueError, match="Koordinat asal"):
+        geo.titik_terdekat(float("nan"), 106.85, df)
