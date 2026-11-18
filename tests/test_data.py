@@ -103,3 +103,10 @@ def test_validasi_koordinat_menangkap_titik_tanpa_koordinat():
     df = pd.DataFrame({"nama": ["Merauke", "Pos Baru"], "lat": [-8.5, None], "lon": [140.4, 120.0]})
     with pytest.raises(ValueError, match="Pos Baru"):
         muat_data._validasi_koordinat(df, "uji.csv")
+
+
+def test_validasi_koordinat_teks_salah_ketik_sebut_namanya():
+    # Koma desimal membuat kolom lat terbaca sebagai teks; pesan error harus menyebut titiknya.
+    df = pd.DataFrame({"nama": ["Merauke", "Pos Koma"], "lat": ["-8.5", "-6,2"], "lon": [140.4, 106.8]})
+    with pytest.raises(ValueError, match="Pos Koma"):
+        muat_data._validasi_koordinat(df, "uji.csv")
