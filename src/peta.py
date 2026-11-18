@@ -108,7 +108,8 @@ def buat_peta(
     # --- Lapisan 2: ALKI (garis) ---
     if tampil.get("alki"):
         fg = folium.FeatureGroup(name="ALKI (alur laut kepulauan)", show=True)
-        for nama, grup in df_alki.groupby("alki"):
+        # Titik ALKI tanpa koordinat dibuang; Folium menolak NaN dan seluruh peta gagal digambar.
+        for nama, grup in df_alki.dropna(subset=["lat", "lon"]).groupby("alki"):
             titik = grup[["lat", "lon"]].values.tolist()
             folium.PolyLine(titik, color=WARNA_ALKI.get(nama, WARNA_CADANGAN), weight=3, opacity=0.7, dash_array="10 8",
                             tooltip=f"{_aman(nama)} (ilustrasi, bukan koordinat resmi)").add_to(fg)

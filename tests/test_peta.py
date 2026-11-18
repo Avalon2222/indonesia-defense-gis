@@ -133,3 +133,11 @@ def test_label_alki_di_escape():
     # DivIcon menyimpan HTML-nya sebagai string JSON, jadi tag mentah muncul sebagai \u003ci\u003e.
     assert "<i>X</i>" not in html
     assert "\\u003ci\\u003eX" not in html
+
+
+def test_titik_alki_tanpa_koordinat_dilewati():
+    tni, pulau, alki, asing = _data()
+    alki = alki.copy()
+    alki.loc[alki.index[0], "lat"] = float("nan")
+    html = peta.buat_peta(tni, pulau, alki, asing, {"alki": True}, [500]).get_root().render()
+    assert "ALKI I" in html
