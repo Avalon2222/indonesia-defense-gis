@@ -177,3 +177,9 @@ def test_kelompok_negara_singkatan_as_dan_tiongkok():
     assert geo.kelompok_negara("ASEAN") == "Lainnya"
     assert geo.kelompok_negara("Tiongkok") == "China"
     assert geo.kelompok_negara("RRT (PLAN)") == "China"
+
+
+def test_arah_kompas_koordinat_pd_na():
+    assert geo.arah_kompas(pd.NA, 100, 5, 100) == ""
+    assert geo.arah_kompas(0, 100, 5, pd.NA) == ""
+    assert geo.arah_kompas(np.float64(0), 100, np.float64(5), 100) == "U"
