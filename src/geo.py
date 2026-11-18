@@ -99,6 +99,9 @@ def titik_terdekat(lat: float, lon: float, df: pd.DataFrame) -> tuple[pd.Series,
     """Baris df yang paling dekat ke (lat, lon), beserta jaraknya (km)."""
     if df.empty:
         raise ValueError("DataFrame kosong, tidak ada titik untuk dibandingkan")
+    if math.isnan(haversine_km(lat, lon, lat, lon)):
+        # Tanpa cek ini semua jarak jadi NaN dan pesannya keliru menyalahkan isi df.
+        raise ValueError(f"Koordinat asal kosong atau bukan angka: ({lat}, {lon})")
     jarak = jarak_ke_semua(lat, lon, df)
     if jarak.isna().all():
         raise ValueError("Tidak ada titik dengan koordinat lengkap untuk dibandingkan")
