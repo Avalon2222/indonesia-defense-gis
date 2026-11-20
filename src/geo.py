@@ -159,7 +159,8 @@ def kelompok_negara(negara_operator: str) -> str:
         return "Amerika Serikat"
     if teks.startswith("australia"):
         return "Australia"
-    if teks.startswith(("china", "tiongkok", "rrt")):
+    # Ejaan Indonesia "Cina"/"RRC" dan singkatan Inggris "PRC" juga sering dipakai di catatan.
+    if teks.startswith(("china", "cina", "tiongkok", "rrt", "rrc", "prc")):
         return "China"
     if teks.startswith("singapura"):
         return "Singapura"

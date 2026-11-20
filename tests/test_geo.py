@@ -209,3 +209,8 @@ def test_haversine_koordinat_tak_hingga_jadi_nan():
 def test_arah_kompas_koordinat_tak_hingga():
     assert geo.arah_kompas(float("inf"), 106.8, -6.2, 106.8) == ""
     assert geo.arah_kompas(-6.2, 106.8, 1.3, float("-inf")) == ""
+
+
+@pytest.mark.parametrize("teks", ["Cina", "RRC (Angkatan Laut)", "PRC"])
+def test_kelompok_negara_ejaan_cina(teks):
+    assert geo.kelompok_negara(teks) == "China"
