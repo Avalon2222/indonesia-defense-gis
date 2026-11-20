@@ -197,3 +197,10 @@ def test_titik_terdekat_koordinat_asal_kosong_pesannya_jelas():
     df = pd.DataFrame({"nama": ["A"], "lat": [1.0], "lon": [104.0]})
     with pytest.raises(ValueError, match="Koordinat asal"):
         geo.titik_terdekat(float("nan"), 106.85, df)
+
+
+def test_haversine_koordinat_tak_hingga_jadi_nan():
+    assert math.isnan(geo.haversine_km(float("inf"), 106.8, -6.2, 106.8))
+    assert math.isnan(geo.haversine_km(-6.2, 106.8, -6.2, float("-inf")))
+    with pytest.raises(ValueError, match="Koordinat asal"):
+        geo.titik_terdekat(float("inf"), 106.8, pd.DataFrame({"nama": ["a"], "lat": [-6.2], "lon": [106.8]}))
