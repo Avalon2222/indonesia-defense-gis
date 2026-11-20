@@ -89,9 +89,11 @@ def buat_peta(
     # --- Lapisan 1: lingkaran jarak (digambar dulu supaya di bawah titik) ---
     if tampil.get("lingkaran") and tampil.get("asing"):
         fg = folium.FeatureGroup(name="Lingkaran jarak dari pangkalan asing", show=True)
+        # Radius dobel menggambar lingkaran yang sama dua kali, dan radius <= 0 atau NaN tidak bermakna.
+        radius_unik = sorted({float(r) for r in radius_km if pd.notna(r) and r > 0})
         for _, b in df_asing.iterrows():
             # radius terkecil diisi warna tipis, radius lebih besar hanya garis putus-putus (agar tidak menumpuk)
-            for i, r in enumerate(sorted(radius_km)):
+            for i, r in enumerate(radius_unik):
                 folium.Circle(
                     location=[b["lat"], b["lon"]],
                     radius=r * 1000,  # Folium pakai meter
@@ -101,7 +103,7 @@ def buat_peta(
                     fill_opacity=0.07,
                     opacity=0.6 if i == 0 else 0.35,
                     dash_array=None if i == 0 else "4 6",
-                    tooltip=f"{_aman(b['nama'])} – radius {r} km",
+                    tooltip=f"{_aman(b['nama'])} – radius {r:g} km",
                 ).add_to(fg)
         fg.add_to(m)
 

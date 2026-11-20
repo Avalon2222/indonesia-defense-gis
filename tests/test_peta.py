@@ -141,3 +141,13 @@ def test_titik_alki_tanpa_koordinat_dilewati():
     alki.loc[alki.index[0], "lat"] = float("nan")
     html = peta.buat_peta(tni, pulau, alki, asing, {"alki": True}, [500]).get_root().render()
     assert "ALKI I" in html
+
+
+def test_lingkaran_radius_dobel_dan_nol_dilewati():
+    tni, pulau, alki, asing = _data()
+    asing = asing.iloc[:1]
+    m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500, 0, 500, -100, 1000])
+    html = m.get_root().render()
+    assert html.count("L.circle(") == 2
+    assert "radius 500 km" in html and "radius 1000 km" in html
+    assert "radius 0 km" not in html
