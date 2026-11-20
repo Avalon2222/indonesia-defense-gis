@@ -67,8 +67,8 @@ def arah_kompas(lat1: float, lon1: float, lat2: float, lon2: float) -> str:
         lat1, lon1, lat2, lon2 = (float(v) for v in (lat1, lon1, lat2, lon2))
     except (TypeError, ValueError):
         return ""
-    if any(math.isnan(v) for v in (lat1, lon1, lat2, lon2)):
-        return ""
+    if not all(math.isfinite(v) for v in (lat1, lon1, lat2, lon2)):
+        return ""   # NaN dan tak hingga (math.sin(inf) melempar error) sama-sama tidak punya arah
     if lat1 == lat2 and lon1 == lon2:
         return "-"   # titik yang sama tidak punya arah; atan2(0, 0) akan keliru memberi "U"
     phi1, phi2 = math.radians(lat1), math.radians(lat2)

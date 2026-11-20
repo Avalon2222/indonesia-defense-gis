@@ -204,3 +204,8 @@ def test_haversine_koordinat_tak_hingga_jadi_nan():
     assert math.isnan(geo.haversine_km(-6.2, 106.8, -6.2, float("-inf")))
     with pytest.raises(ValueError, match="Koordinat asal"):
         geo.titik_terdekat(float("inf"), 106.8, pd.DataFrame({"nama": ["a"], "lat": [-6.2], "lon": [106.8]}))
+
+
+def test_arah_kompas_koordinat_tak_hingga():
+    assert geo.arah_kompas(float("inf"), 106.8, -6.2, 106.8) == ""
+    assert geo.arah_kompas(-6.2, 106.8, 1.3, float("-inf")) == ""
