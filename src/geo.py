@@ -35,6 +35,8 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
         lat1, lon1, lat2, lon2 = (float(v) for v in (lat1, lon1, lat2, lon2))
     except (TypeError, ValueError):
         return math.nan
+    if math.isinf(lat1) or math.isinf(lon1) or math.isinf(lat2) or math.isinf(lon2):
+        return math.nan   # math.cos(inf) melempar "math domain error"
     # 1. derajat -> radian, karena fungsi trigonometri Python pakai radian
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
     d_phi = math.radians(lat2 - lat1)
