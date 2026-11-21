@@ -110,3 +110,20 @@ def test_validasi_koordinat_teks_salah_ketik_sebut_namanya():
     df = pd.DataFrame({"nama": ["Merauke", "Pos Koma"], "lat": ["-8.5", "-6,2"], "lon": [140.4, 106.8]})
     with pytest.raises(ValueError, match="Pos Koma"):
         muat_data._validasi_koordinat(df, "uji.csv")
+
+
+def test_pangkalan_asing_koordinat_salah_ketik_jadi_nan(tmp_path, monkeypatch):
+    from src import geo
+
+    (tmp_path / "pangkalan_asing.csv").write_text(
+        "id,nama,negara_operator,jenis,lat,lon\n"
+        "1,Darwin,Australia,udara,-12.41,130.88\n"
+        "2,Changi,Singapura,laut,\"1,35\",103.99\n"
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_pangkalan_asing()
+    assert pd.api.types.is_float_dtype(df["lat"])
+    assert pd.isna(df.loc[1, "lat"])
+    tni = pd.DataFrame({"nama": ["Lanud"], "lat": [-6.2], "lon": [106.8]})
+    tabel = geo.tabel_jarak(df, tni, tni)
+    assert tabel["nama"].tolist() == ["Darwin"]
