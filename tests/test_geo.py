@@ -214,3 +214,12 @@ def test_arah_kompas_koordinat_tak_hingga():
 @pytest.mark.parametrize("teks", ["Cina", "RRC (Angkatan Laut)", "PRC"])
 def test_kelompok_negara_ejaan_cina(teks):
     assert geo.kelompok_negara(teks) == "China"
+
+
+def test_jarak_ke_semua_sel_teks_jadi_nan():
+    df = pd.DataFrame({"nama": ["A", "B"], "lat": ["-6.2", "tidak ada"], "lon": [106.8, 106.8]})
+    jarak = geo.jarak_ke_semua(-6.2, 106.8, df)
+    assert jarak.iloc[0] == pytest.approx(0.0)
+    assert pd.isna(jarak.iloc[1])
+    titik, km = geo.titik_terdekat(-6.0, 106.8, df)
+    assert titik["nama"] == "A"
