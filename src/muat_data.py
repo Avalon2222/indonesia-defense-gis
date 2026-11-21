@@ -46,6 +46,11 @@ def muat_alki() -> pd.DataFrame:
 
 def muat_pangkalan_asing() -> pd.DataFrame:
     df = _baca("pangkalan_asing.csv")
+    # Koordinat pangkalan asing tidak divalidasi kotak Indonesia, tetapi satu sel salah ketik
+    # ("1,35" pakai koma) tetap tidak boleh membuat seluruh kolom jadi teks. Sel itu jadi NaN
+    # dan barisnya dilewati di peta dan tabel jarak.
+    for kolom in ("lat", "lon"):
+        df[kolom] = pd.to_numeric(df[kolom], errors="coerce")
     df["negara"] = df["negara_operator"].apply(kelompok_negara)
     return df
 
