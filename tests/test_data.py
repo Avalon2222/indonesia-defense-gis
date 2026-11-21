@@ -127,3 +127,12 @@ def test_pangkalan_asing_koordinat_salah_ketik_jadi_nan(tmp_path, monkeypatch):
     tni = pd.DataFrame({"nama": ["Lanud"], "lat": [-6.2], "lon": [106.8]})
     tabel = geo.tabel_jarak(df, tni, tni)
     assert tabel["nama"].tolist() == ["Darwin"]
+
+
+def test_alki_urutan_teks_tetap_diurutkan_sebagai_angka(tmp_path, monkeypatch):
+    (tmp_path / "alki.csv").write_text(
+        "alki,urutan,lat,lon\nALKI I,10,1.0,104.0\nALKI I,2,-1.0,106.0\nALKI I,?,-2.0,106.5\nALKI I,1,2.0,104.0\n"
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_alki()
+    assert df["urutan"].tolist()[:3] == [1, 2, 10]

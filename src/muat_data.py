@@ -41,7 +41,12 @@ def muat_pulau_terluar() -> pd.DataFrame:
 
 
 def muat_alki() -> pd.DataFrame:
-    return _baca("alki.csv").sort_values(["alki", "urutan"])
+    df = _baca("alki.csv")
+    # Kalau satu sel urutan tidak berupa angka, kolomnya terbaca sebagai teks dan "10" tersortir
+    # sebelum "2", sehingga garis ALKI melompat bolak-balik. Koordinat rusak juga jadi NaN.
+    for kolom in ("urutan", "lat", "lon"):
+        df[kolom] = pd.to_numeric(df[kolom], errors="coerce")
+    return df.sort_values(["alki", "urutan"], kind="mergesort")
 
 
 def muat_pangkalan_asing() -> pd.DataFrame:
