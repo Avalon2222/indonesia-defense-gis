@@ -88,8 +88,9 @@ def jarak_ke_semua(lat: float, lon: float, df: pd.DataFrame) -> pd.Series:
     """
     # Versi vektor (numpy) dari haversine_km: semua baris dihitung sekaligus,
     # jauh lebih cepat daripada df.apply baris per baris.
-    lat2 = np.radians(df["lat"].to_numpy(dtype=float))
-    lon2 = np.radians(df["lon"].to_numpy(dtype=float))
+    # Sel teks yang bukan angka jadi NaN (jaraknya kosong), bukan ValueError untuk seluruh tabel.
+    lat2 = np.radians(pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float))
+    lon2 = np.radians(pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float))
     phi1 = math.radians(lat)
     a = np.sin((lat2 - phi1) / 2) ** 2 + math.cos(phi1) * np.cos(lat2) * np.sin((lon2 - math.radians(lon)) / 2) ** 2
     a = np.clip(a, 0.0, 1.0)  # sama seperti haversine_km: cegah NaN di titik antipoda
