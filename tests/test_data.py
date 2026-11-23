@@ -136,3 +136,13 @@ def test_alki_urutan_teks_tetap_diurutkan_sebagai_angka(tmp_path, monkeypatch):
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data.muat_alki()
     assert df["urutan"].tolist()[:3] == [1, 2, 10]
+
+
+def test_pangkalan_asing_koordinat_tak_hingga_jadi_kosong(tmp_path, monkeypatch):
+    (tmp_path / "pangkalan_asing.csv").write_text(
+        "nama,negara_operator,jenis,lat,lon\nA,China,laut,inf,110\nB,China,laut,10,-inf\nC,China,laut,10,110\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_pangkalan_asing()
+    assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [True, True, False]
