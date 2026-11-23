@@ -7,6 +7,7 @@ Fungsi di sini mengembalikan folium.Map; app.py tinggal menampilkannya.
 from __future__ import annotations
 
 import html
+import math
 
 import folium
 import pandas as pd
@@ -90,7 +91,8 @@ def buat_peta(
     if tampil.get("lingkaran") and tampil.get("asing"):
         fg = folium.FeatureGroup(name="Lingkaran jarak dari pangkalan asing", show=True)
         # Radius dobel menggambar lingkaran yang sama dua kali, dan radius <= 0 atau NaN tidak bermakna.
-        radius_unik = sorted({float(r) for r in radius_km if pd.notna(r) and r > 0})
+        # inf juga dibuang: lingkaran berjari-jari tak hingga merusak seluruh peta Leaflet.
+        radius_unik = sorted({float(r) for r in radius_km if pd.notna(r) and 0 < float(r) < math.inf})
         for _, b in df_asing.iterrows():
             # radius terkecil diisi warna tipis, radius lebih besar hanya garis putus-putus (agar tidak menumpuk)
             for i, r in enumerate(radius_unik):

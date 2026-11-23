@@ -151,3 +151,11 @@ def test_lingkaran_radius_dobel_dan_nol_dilewati():
     assert html.count("L.circle(") == 2
     assert "radius 500 km" in html and "radius 1000 km" in html
     assert "radius 0 km" not in html
+
+
+def test_lingkaran_radius_tak_hingga_dilewati():
+    tni, pulau, alki, asing = _data()
+    m = peta.buat_peta(tni, pulau, alki, asing.iloc[:1], SEMUA_LAPISAN, [float("inf"), 500])
+    html = m.get_root().render()
+    assert html.count("L.circle(") == 1
+    assert "radius inf km" not in html
