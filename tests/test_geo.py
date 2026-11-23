@@ -223,3 +223,16 @@ def test_jarak_ke_semua_sel_teks_jadi_nan():
     assert pd.isna(jarak.iloc[1])
     titik, km = geo.titik_terdekat(-6.0, 106.8, df)
     assert titik["nama"] == "A"
+
+
+def test_tabel_jarak_seri_urut_nama():
+    # 60 pangkalan di tiga garis lintang: jarak ke pulau terluar seri dalam tiga kelompok.
+    asing = pd.DataFrame({
+        "nama": [f"P{i:02d}" for i in range(60)][::-1],
+        "negara_operator": "X", "jenis": "x",
+        "lat": [10.0 + (i % 3) for i in range(60)], "lon": 110.0,
+    })
+    titik = pd.DataFrame({"nama": ["A"], "lat": [0.0], "lon": [110.0]})
+    tabel = geo.tabel_jarak(asing, titik, titik)
+    for _, grup in tabel.groupby("jarak_pulau_km", sort=False):
+        assert grup["nama"].tolist() == sorted(grup["nama"])

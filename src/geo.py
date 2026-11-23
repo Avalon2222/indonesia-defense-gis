@@ -147,7 +147,9 @@ def tabel_jarak(df_asing: pd.DataFrame, df_tni: pd.DataFrame, df_pulau: pd.DataF
     kolom = ["nama", "negara_operator", "jenis", "tni_terdekat", "jarak_tni_km", "arah_ke_tni",
              "pulau_terdekat", "jarak_pulau_km", "jumlah_tni_500km", "jumlah_tni_1000km"]
     # Kolom ditulis eksplisit supaya filter yang tidak menyisakan pangkalan tetap menghasilkan tabel kosong yang utuh.
-    return pd.DataFrame(hasil, columns=kolom).sort_values("jarak_pulau_km").reset_index(drop=True)
+    # Jarak sudah dibulatkan ke km sehingga sering seri; seri diurutkan menurut nama supaya stabil.
+    tabel = pd.DataFrame(hasil, columns=kolom)
+    return tabel.sort_values(["jarak_pulau_km", "nama"], kind="mergesort").reset_index(drop=True)
 
 
 def kelompok_negara(negara_operator: str) -> str:
