@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from src.geo import kelompok_negara
@@ -55,7 +56,9 @@ def muat_pangkalan_asing() -> pd.DataFrame:
     # ("1,35" pakai koma) tetap tidak boleh membuat seluruh kolom jadi teks. Sel itu jadi NaN
     # dan barisnya dilewati di peta dan tabel jarak.
     for kolom in ("lat", "lon"):
-        df[kolom] = pd.to_numeric(df[kolom], errors="coerce")
+        angka = pd.to_numeric(df[kolom], errors="coerce")
+        # "inf" lolos to_numeric dan dropna, lalu menggagalkan tabel jarak dan peta; samakan dengan NaN.
+        df[kolom] = angka.where(np.isfinite(angka))
     df["negara"] = df["negara_operator"].apply(kelompok_negara)
     return df
 
