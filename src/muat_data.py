@@ -79,11 +79,11 @@ def muat_anggaran_indonesia() -> pd.DataFrame:
 
 
 def muat_anggaran_kawasan() -> pd.DataFrame:
-    return _baca("anggaran_kawasan.csv")
+    return _angka(_baca("anggaran_kawasan.csv"), ["belanja_usd_miliar_2024", "persen_pdb_2024", "personel_aktif_ribu"])
 
 
 def muat_alutsista() -> pd.DataFrame:
-    return _baca("alutsista.csv")
+    return _angka(_baca("alutsista.csv"), ["jumlah_perkiraan"])
 
 
 def _validasi_koordinat(df: pd.DataFrame, nama: str) -> None:
