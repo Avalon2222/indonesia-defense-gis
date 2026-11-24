@@ -162,3 +162,24 @@ def test_anggaran_sel_bukan_angka_tidak_merusak_kolom(tmp_path, monkeypatch):
     assert ang["tahun"].tolist() == [2024, 2025, 10000]
     assert pd.api.types.is_numeric_dtype(ang["anggaran_rp_triliun"])
     assert pd.isna(ang.loc[ang["tahun"] == 2025, "anggaran_rp_triliun"]).all()
+
+
+def test_kawasan_dan_alutsista_sel_bukan_angka_jadi_nan(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_kawasan.csv").write_text(
+        "negara,belanja_usd_miliar_2024,persen_pdb_2024,personel_aktif_ribu,keyakinan,sumber\n"
+        "Indonesia,10.6,0.8,400,sedang,x\n"
+        "Timor Leste,n.a.,,2,rendah,x\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "alutsista.csv").write_text(
+        "matra,alutsista,jumlah_perkiraan,status,sumber\n"
+        "AD,Tank,103,aktif,x\n"
+        "AL,Kapal,rahasia,aktif,x\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    kaw = muat_data.muat_anggaran_kawasan()
+    assert kaw["belanja_usd_miliar_2024"].sum() == pytest.approx(10.6)
+    assert kaw["persen_pdb_2024"].isna().tolist() == [False, True]
+    alut = muat_data.muat_alutsista()
+    assert alut["jumlah_perkiraan"].sum() == 103
