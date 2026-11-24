@@ -146,3 +146,19 @@ def test_pangkalan_asing_koordinat_tak_hingga_jadi_kosong(tmp_path, monkeypatch)
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data.muat_pangkalan_asing()
     assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [True, True, False]
+
+
+def test_anggaran_sel_bukan_angka_tidak_merusak_kolom(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_indonesia.csv").write_text(
+        "tahun,anggaran_rp_triliun,persen_pdb,keyakinan,catatan,sumber\n"
+        "2024,139.3,0.6,sedang,,x\n"
+        "10000,1,0.1,rendah,,x\n"
+        "2025,belum ada,,rendah,,x\n"
+        "perkiraan,1,0.1,rendah,,x\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    ang = muat_data.muat_anggaran_indonesia()
+    assert ang["tahun"].tolist() == [2024, 2025, 10000]
+    assert pd.api.types.is_numeric_dtype(ang["anggaran_rp_triliun"])
+    assert pd.isna(ang.loc[ang["tahun"] == 2025, "anggaran_rp_triliun"]).all()

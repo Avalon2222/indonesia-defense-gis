@@ -63,8 +63,19 @@ def muat_pangkalan_asing() -> pd.DataFrame:
     return df
 
 
+def _angka(df: pd.DataFrame, kolom: list[str]) -> pd.DataFrame:
+    """Satu sel bukan angka ("n.a.") membuat seluruh kolom terbaca teks dan _baca mengisinya "".
+    Grafik lalu menganggapnya kategori; sel itu dijadikan NaN saja."""
+    for k in kolom:
+        if k in df.columns:
+            df[k] = pd.to_numeric(df[k].replace("", None), errors="coerce")
+    return df
+
+
 def muat_anggaran_indonesia() -> pd.DataFrame:
-    return _baca("anggaran_indonesia.csv").sort_values("tahun")
+    df = _angka(_baca("anggaran_indonesia.csv"), ["tahun", "anggaran_rp_triliun", "persen_pdb"])
+    # Tahun teks ("2025*") tersortir sebagai teks; baris tanpa tahun angka tidak bisa digambar di linimasa.
+    return df.dropna(subset=["tahun"]).astype({"tahun": int}).sort_values("tahun", kind="mergesort")
 
 
 def muat_anggaran_kawasan() -> pd.DataFrame:
