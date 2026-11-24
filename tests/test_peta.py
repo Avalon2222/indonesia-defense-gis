@@ -159,3 +159,19 @@ def test_lingkaran_radius_tak_hingga_dilewati():
     html = m.get_root().render()
     assert html.count("L.circle(") == 1
     assert "radius inf km" not in html
+
+
+def test_analisis_jarak_lewati_titik_tanpa_koordinat():
+    tni, pulau, alki, asing = _data()
+    terpilih = asing.iloc[0].copy()
+    terpilih["lat"] = float("nan")
+    m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500], terpilih=terpilih, tni_terdekat=tni.iloc[0])
+    assert "Analisis jarak (pangkalan terpilih)" not in m.get_root().render()
+
+    tni_rusak = tni.iloc[0].copy()
+    tni_rusak["lon"] = float("nan")
+    m = peta.buat_peta(tni, pulau, alki, asing, SEMUA_LAPISAN, [500], terpilih=asing.iloc[0],
+                       tni_terdekat=tni_rusak, pulau_terdekat=pulau.iloc[0])
+    html = m.get_root().render()
+    assert "Markas TNI terdekat" not in html
+    assert "Pulau terluar/perbatasan terdekat" in html
