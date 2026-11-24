@@ -170,12 +170,16 @@ def buat_peta(
         fg.add_to(m)
 
     # --- Lapisan 6: garis analisis dari pangkalan terpilih ---
-    if terpilih is not None:
+    # Pangkalan terpilih atau target tanpa koordinat lengkap dilewati; Folium menolak lokasi NaN.
+    def _lengkap(b):
+        return b is not None and pd.notna(b["lat"]) and pd.notna(b["lon"])
+
+    if _lengkap(terpilih):
         fg = folium.FeatureGroup(name="Analisis jarak (pangkalan terpilih)", show=True)
         folium.CircleMarker([terpilih["lat"], terpilih["lon"]], radius=14, color="#000", weight=2, fill=False,
                             tooltip=f"Terpilih: {_aman(terpilih['nama'])}").add_to(fg)
         for target, warna, label in ((tni_terdekat, "#1565c0", "Markas TNI terdekat"), (pulau_terdekat, "#00897b", "Pulau terluar/perbatasan terdekat")):
-            if target is not None:
+            if _lengkap(target):
                 folium.PolyLine([[terpilih["lat"], terpilih["lon"]], [target["lat"], target["lon"]]],
                                 color=warna, weight=3, opacity=0.9, tooltip=f"{label}: {_aman(target['nama'])}").add_to(fg)
         fg.add_to(m)
