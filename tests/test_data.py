@@ -183,3 +183,14 @@ def test_kawasan_dan_alutsista_sel_bukan_angka_jadi_nan(tmp_path, monkeypatch):
     assert kaw["persen_pdb_2024"].isna().tolist() == [False, True]
     alut = muat_data.muat_alutsista()
     assert alut["jumlah_perkiraan"].sum() == 103
+
+
+def test_anggaran_tahun_tak_hingga_dibuang(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_indonesia.csv").write_text(
+        "tahun,anggaran_rp_triliun,persen_pdb\n2023,135,0.65\ninf,140,0.7\n2024,inf,0.68\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_anggaran_indonesia()
+    assert df["tahun"].tolist() == [2023, 2024]
+    assert pd.isna(df["anggaran_rp_triliun"].iloc[1])
