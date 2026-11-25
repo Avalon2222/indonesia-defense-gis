@@ -194,3 +194,12 @@ def test_anggaran_tahun_tak_hingga_dibuang(tmp_path, monkeypatch):
     df = muat_data.muat_anggaran_indonesia()
     assert df["tahun"].tolist() == [2023, 2024]
     assert pd.isna(df["anggaran_rp_triliun"].iloc[1])
+
+
+def test_alki_koordinat_tak_hingga_jadi_kosong(tmp_path, monkeypatch):
+    (tmp_path / "alki.csv").write_text(
+        "alki,urutan,lat,lon\nALKI I,1,2.0,104.0\nALKI I,2,inf,106.0\nALKI I,3,-2.0,-inf\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_alki()
+    assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [False, True, True]
