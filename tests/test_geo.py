@@ -236,3 +236,12 @@ def test_tabel_jarak_seri_urut_nama():
     tabel = geo.tabel_jarak(asing, titik, titik)
     for _, grup in tabel.groupby("jarak_pulau_km", sort=False):
         assert grup["nama"].tolist() == sorted(grup["nama"])
+
+
+def test_titik_asal_teks_angka_diterima():
+    df = pd.DataFrame({"nama": ["Jakarta", "Singapura"], "lat": [-6.21, 1.35], "lon": [106.85, 103.82]})
+    baris, jarak = geo.titik_terdekat("-6.2", "106.8", df)
+    assert baris["nama"] == "Jakarta"
+    assert jarak < 10
+    assert geo.jumlah_dalam_radius("1.35", "103.82", df, 100) == 1
+    assert geo.jarak_ke_semua(None, 106.8, df).isna().all()
