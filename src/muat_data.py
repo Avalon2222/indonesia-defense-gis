@@ -46,7 +46,9 @@ def muat_alki() -> pd.DataFrame:
     # Kalau satu sel urutan tidak berupa angka, kolomnya terbaca sebagai teks dan "10" tersortir
     # sebelum "2", sehingga garis ALKI melompat bolak-balik. Koordinat rusak juga jadi NaN.
     for kolom in ("urutan", "lat", "lon"):
-        df[kolom] = pd.to_numeric(df[kolom], errors="coerce")
+        angka = pd.to_numeric(df[kolom], errors="coerce")
+        # Titik "inf" lolos dropna di peta dan membuat garis ALKI ditulis sebagai Infinity di JavaScript.
+        df[kolom] = angka.where(np.isfinite(angka))
     return df.sort_values(["alki", "urutan"], kind="mergesort")
 
 
