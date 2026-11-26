@@ -25,7 +25,8 @@ def _baca(nama_file: str) -> pd.DataFrame:
     # kolom teks kosong -> string kosong (bukan NaN) supaya aman dipakai di popup
     for kolom in df.columns:
         if _kolom_teks(df[kolom]):
-            df[kolom] = df[kolom].fillna("")
+            # Spasi sisa suntingan ("Laut ") membuat filter matra punya dua pilihan untuk satu matra.
+            df[kolom] = df[kolom].fillna("").map(lambda v: v.strip() if isinstance(v, str) else v)
     return df
 
 
