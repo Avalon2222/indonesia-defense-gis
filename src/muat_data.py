@@ -61,6 +61,10 @@ def muat_pangkalan_asing() -> pd.DataFrame:
         angka = pd.to_numeric(df[kolom], errors="coerce")
         # "inf" lolos to_numeric dan dropna, lalu menggagalkan tabel jarak dan peta; samakan dengan NaN.
         df[kolom] = angka.where(np.isfinite(angka))
+    # Lintang di luar ±90 atau bujur di luar ±180 (misalnya lat/lon tertukar) bukan titik nyata;
+    # haversine tetap menghitungnya dan tabel jarak menampilkan angka ngawur.
+    df["lat"] = df["lat"].where(df["lat"].abs() <= 90)
+    df["lon"] = df["lon"].where(df["lon"].abs() <= 180)
     df["negara"] = df["negara_operator"].apply(kelompok_negara)
     return df
 
