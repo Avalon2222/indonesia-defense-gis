@@ -224,3 +224,10 @@ def test_anggaran_tahun_pecahan_dibuang(tmp_path, monkeypatch):
     df = muat_data.muat_anggaran_indonesia()
     assert df["tahun"].tolist() == [2023, 2024]
     assert df["anggaran_rp_triliun"].tolist() == [135, 139]
+
+
+def test_baca_buang_spasi_di_kolom_teks(tmp_path, monkeypatch):
+    (tmp_path / "uji.csv").write_text("nama,matra,lat,lon\nA,Laut ,3.9,108.4\nB, Laut,5.9,95.3\nC,Udara,1.0,104.0\n")
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data._baca("uji.csv")
+    assert sorted(df["matra"].unique()) == ["Laut", "Udara"]
