@@ -213,3 +213,14 @@ def test_pangkalan_asing_koordinat_di_luar_jangkauan_jadi_kosong(tmp_path, monke
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data.muat_pangkalan_asing()
     assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [True, True, False]
+
+
+def test_anggaran_tahun_pecahan_dibuang(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_indonesia.csv").write_text(
+        "tahun,anggaran_rp_triliun,persen_pdb\n2023,135,0.65\n2024.5,140,0.7\n2024.0,139,0.68\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_anggaran_indonesia()
+    assert df["tahun"].tolist() == [2023, 2024]
+    assert df["anggaran_rp_triliun"].tolist() == [135, 139]

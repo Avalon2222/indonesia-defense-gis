@@ -83,6 +83,8 @@ def _angka(df: pd.DataFrame, kolom: list[str]) -> pd.DataFrame:
 def muat_anggaran_indonesia() -> pd.DataFrame:
     df = _angka(_baca("anggaran_indonesia.csv"), ["tahun", "anggaran_rp_triliun", "persen_pdb"])
     # Tahun teks ("2025*") tersortir sebagai teks; baris tanpa tahun angka tidak bisa digambar di linimasa.
+    # Tahun pecahan (2024.5) juga dibuang; astype(int) memotongnya jadi 2024 dan tahun itu muncul dua kali.
+    df = df[df["tahun"] % 1 == 0]
     return df.dropna(subset=["tahun"]).astype({"tahun": int}).sort_values("tahun", kind="mergesort")
 
 
