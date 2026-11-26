@@ -203,3 +203,13 @@ def test_alki_koordinat_tak_hingga_jadi_kosong(tmp_path, monkeypatch):
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data.muat_alki()
     assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [False, True, True]
+
+
+def test_pangkalan_asing_koordinat_di_luar_jangkauan_jadi_kosong(tmp_path, monkeypatch):
+    (tmp_path / "pangkalan_asing.csv").write_text(
+        "nama,negara_operator,jenis,lat,lon\nA,China,laut,110.5,10\nB,China,laut,10,190\nC,China,laut,-12.4,130.9\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_pangkalan_asing()
+    assert df[["lat", "lon"]].isna().any(axis=1).tolist() == [True, True, False]
