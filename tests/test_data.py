@@ -241,3 +241,13 @@ def test_alki_titik_tanpa_urutan_dibuang(tmp_path, monkeypatch):
     df = muat_data.muat_alki()
     assert df["urutan"].tolist() == [1, 2]
     assert -8.0 not in df["lat"].tolist()
+
+
+def test_matra_huruf_kecil_disamakan(tmp_path, monkeypatch):
+    (tmp_path / "markas_tni.csv").write_text(
+        "nama,matra,jenis,lat,lon\nA,al,Lantamal,-6.1,106.8\nB,Gabungan,Kogabwilhan,-2.0,110.0\nC,GABUNGAN,Kogabwilhan,-3.0,120.0\nD,au,Lanud,-7.0,112.0\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_markas_tni()
+    assert df["matra"].tolist() == ["AL", "Gabungan", "Gabungan", "AU"]

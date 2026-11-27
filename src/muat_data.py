@@ -30,8 +30,14 @@ def _baca(nama_file: str) -> pd.DataFrame:
     return df
 
 
+# Ejaan baku matra, dipakai filter dan warna peta. Kunci huruf kecil supaya "al" atau "gabungan" tetap cocok.
+MATRA_BAKU = {"ad": "AD", "al": "AL", "au": "AU", "gabungan": "Gabungan"}
+
+
 def muat_markas_tni() -> pd.DataFrame:
     df = _baca("markas_tni.csv")
+    # Matra "al" (huruf kecil) tidak cocok dengan pilihan filter "AL", sehingga markasnya hilang dari peta.
+    df["matra"] = df["matra"].map(lambda m: MATRA_BAKU.get(m.lower(), m) if isinstance(m, str) else m)
     _validasi_koordinat(df, "markas_tni.csv")
     return df
 
