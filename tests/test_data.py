@@ -231,3 +231,13 @@ def test_baca_buang_spasi_di_kolom_teks(tmp_path, monkeypatch):
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data._baca("uji.csv")
     assert sorted(df["matra"].unique()) == ["Laut", "Udara"]
+
+
+def test_alki_titik_tanpa_urutan_dibuang(tmp_path, monkeypatch):
+    (tmp_path / "alki.csv").write_text(
+        "alki,urutan,lat,lon\nALKI I,2,-1.0,106.0\nALKI I,?,-8.0,115.0\nALKI I,1,2.0,104.0\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_alki()
+    assert df["urutan"].tolist() == [1, 2]
+    assert -8.0 not in df["lat"].tolist()
