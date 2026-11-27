@@ -50,6 +50,9 @@ def muat_alki() -> pd.DataFrame:
         angka = pd.to_numeric(df[kolom], errors="coerce")
         # Titik "inf" lolos dropna di peta dan membuat garis ALKI ditulis sebagai Infinity di JavaScript.
         df[kolom] = angka.where(np.isfinite(angka))
+    # Titik tanpa urutan tidak punya tempat di garis; kalau dibiarkan, sort menaruhnya di ujung
+    # dan garis ALKI tiba-tiba melompat ke titik itu.
+    df = df.dropna(subset=["urutan"])
     return df.sort_values(["alki", "urutan"], kind="mergesort")
 
 
