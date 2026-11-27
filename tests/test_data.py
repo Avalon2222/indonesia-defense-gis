@@ -251,3 +251,19 @@ def test_matra_huruf_kecil_disamakan(tmp_path, monkeypatch):
     monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
     df = muat_data.muat_markas_tni()
     assert df["matra"].tolist() == ["AL", "Gabungan", "Gabungan", "AU"]
+
+
+def test_angka_negatif_anggaran_dan_alutsista_jadi_kosong(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_kawasan.csv").write_text(
+        "negara,belanja_usd_miliar_2024,persen_pdb_2024,personel_aktif_ribu\nA,-10.6,0.8,400\nB,14.9,2.8,-51\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "alutsista.csv").write_text("matra,alutsista,jumlah_perkiraan\nAD,Tank,-3\nAL,Kapal,7\n", encoding="utf-8")
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    kawasan = muat_data.muat_anggaran_kawasan()
+    assert pd.isna(kawasan["belanja_usd_miliar_2024"].iloc[0])
+    assert kawasan["belanja_usd_miliar_2024"].iloc[1] == 14.9
+    assert pd.isna(kawasan["personel_aktif_ribu"].iloc[1])
+    alut = muat_data.muat_alutsista()
+    assert pd.isna(alut["jumlah_perkiraan"].iloc[0])
+    assert alut["jumlah_perkiraan"].iloc[1] == 7
