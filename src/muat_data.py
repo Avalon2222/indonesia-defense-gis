@@ -98,12 +98,22 @@ def muat_anggaran_indonesia() -> pd.DataFrame:
     return df.dropna(subset=["tahun"]).astype({"tahun": int}).sort_values("tahun", kind="mergesort")
 
 
+def _tidak_negatif(df: pd.DataFrame, kolom: list[str]) -> pd.DataFrame:
+    """Belanja, personel, dan jumlah alutsista tidak mungkin negatif; nilai seperti -5 dianggap salah ketik.
+    Grafik belanja memakai skala log, dan batang negatif atau nol hilang tanpa pesan apa pun."""
+    for k in kolom:
+        if k in df.columns:
+            df[k] = df[k].where(~(df[k] < 0))
+    return df
+
+
 def muat_anggaran_kawasan() -> pd.DataFrame:
-    return _angka(_baca("anggaran_kawasan.csv"), ["belanja_usd_miliar_2024", "persen_pdb_2024", "personel_aktif_ribu"])
+    kolom = ["belanja_usd_miliar_2024", "persen_pdb_2024", "personel_aktif_ribu"]
+    return _tidak_negatif(_angka(_baca("anggaran_kawasan.csv"), kolom), kolom)
 
 
 def muat_alutsista() -> pd.DataFrame:
-    return _angka(_baca("alutsista.csv"), ["jumlah_perkiraan"])
+    return _tidak_negatif(_angka(_baca("alutsista.csv"), ["jumlah_perkiraan"]), ["jumlah_perkiraan"])
 
 
 def _validasi_koordinat(df: pd.DataFrame, nama: str) -> None:
