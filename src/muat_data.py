@@ -95,7 +95,11 @@ def muat_anggaran_indonesia() -> pd.DataFrame:
     # Tahun teks ("2025*") tersortir sebagai teks; baris tanpa tahun angka tidak bisa digambar di linimasa.
     # Tahun pecahan (2024.5) juga dibuang; astype(int) memotongnya jadi 2024 dan tahun itu muncul dua kali.
     df = df[df["tahun"] % 1 == 0]
-    return df.dropna(subset=["tahun"]).astype({"tahun": int}).sort_values("tahun", kind="mergesort")
+    df = df.dropna(subset=["tahun"]).astype({"tahun": int})
+    # Tahun yang tercatat dua kali (baris tersalin saat menyunting) membuat linimasa naik-turun di
+    # tahun yang sama; pakai baris terakhir, yang biasanya revisi terbaru.
+    df = df.drop_duplicates("tahun", keep="last")
+    return df.sort_values("tahun", kind="mergesort").reset_index(drop=True)
 
 
 def _tidak_negatif(df: pd.DataFrame, kolom: list[str]) -> pd.DataFrame:
