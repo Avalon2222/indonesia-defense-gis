@@ -27,6 +27,9 @@ def _baca(nama_file: str) -> pd.DataFrame:
         if _kolom_teks(df[kolom]):
             # Spasi sisa suntingan ("Laut ") membuat filter matra punya dua pilihan untuk satu matra.
             df[kolom] = df[kolom].fillna("").map(lambda v: v.strip() if isinstance(v, str) else v)
+    # Baris yang tersalin utuh (id sama) menggandakan penanda di peta dan jumlah markas dalam radius.
+    if "id" in df.columns:
+        df = df.drop_duplicates("id", keep="first").reset_index(drop=True)
     return df
 
 
