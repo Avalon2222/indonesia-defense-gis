@@ -290,3 +290,13 @@ def test_angka_desimal_koma_tetap_terbaca(tmp_path, monkeypatch):
     assert df["anggaran_rp_triliun"].tolist() == [135.2, 139]
     assert df["persen_pdb"].iloc[0] == 0.65
     assert pd.isna(df["persen_pdb"].iloc[1])
+
+
+def test_baris_dengan_id_ganda_dipakai_sekali(tmp_path, monkeypatch):
+    (tmp_path / "markas_tni.csv").write_text(
+        "id,nama,matra,jenis,lat,lon\n1,A,AL,Lantamal,-6.1,106.8\n2,B,AU,Lanud,-7.0,112.0\n1,A,AL,Lantamal,-6.1,106.8\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_markas_tni()
+    assert df["id"].tolist() == [1, 2]
