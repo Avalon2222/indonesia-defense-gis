@@ -278,3 +278,15 @@ def test_anggaran_tahun_ganda_pakai_baris_terakhir(tmp_path, monkeypatch):
     df = muat_data.muat_anggaran_indonesia()
     assert df["tahun"].tolist() == [2023, 2024]
     assert df["anggaran_rp_triliun"].tolist() == [135, 141]
+
+
+def test_angka_desimal_koma_tetap_terbaca(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_indonesia.csv").write_text(
+        "tahun,anggaran_rp_triliun,persen_pdb\n2023,\"135,2\",\"0,65\"\n2024,139,n.a.\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_anggaran_indonesia()
+    assert df["anggaran_rp_triliun"].tolist() == [135.2, 139]
+    assert df["persen_pdb"].iloc[0] == 0.65
+    assert pd.isna(df["persen_pdb"].iloc[1])

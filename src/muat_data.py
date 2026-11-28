@@ -84,7 +84,11 @@ def _angka(df: pd.DataFrame, kolom: list[str]) -> pd.DataFrame:
     Grafik lalu menganggapnya kategori; sel itu dijadikan NaN saja."""
     for k in kolom:
         if k in df.columns:
-            angka = pd.to_numeric(df[k].replace("", None), errors="coerce")
+            nilai = df[k].replace("", None)
+            # Desimal gaya Indonesia ("102,3") dari suntingan manual dulu jadi NaN dan hilang dari grafik.
+            if _kolom_teks(nilai):
+                nilai = nilai.map(lambda v: v.replace(",", ".") if isinstance(v, str) and v.count(",") == 1 else v)
+            angka = pd.to_numeric(nilai, errors="coerce")
             # "inf" juga terbaca angka; lolos dropna lalu membuat astype(int) tahun dan skala grafik rusak.
             df[k] = angka.where(np.isfinite(angka))
     return df
