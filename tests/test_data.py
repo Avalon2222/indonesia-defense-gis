@@ -267,3 +267,14 @@ def test_angka_negatif_anggaran_dan_alutsista_jadi_kosong(tmp_path, monkeypatch)
     alut = muat_data.muat_alutsista()
     assert pd.isna(alut["jumlah_perkiraan"].iloc[0])
     assert alut["jumlah_perkiraan"].iloc[1] == 7
+
+
+def test_anggaran_tahun_ganda_pakai_baris_terakhir(tmp_path, monkeypatch):
+    (tmp_path / "anggaran_indonesia.csv").write_text(
+        "tahun,anggaran_rp_triliun,persen_pdb\n2024,139,0.68\n2023,135,0.65\n2024,141,0.7\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(muat_data, "FOLDER_DATA", tmp_path)
+    df = muat_data.muat_anggaran_indonesia()
+    assert df["tahun"].tolist() == [2023, 2024]
+    assert df["anggaran_rp_triliun"].tolist() == [135, 141]
